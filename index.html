@@ -24,7 +24,7 @@
         }
         .header {
             text-align: center;
-            padding: 30px 20px;
+            padding: 30px 20px 10px;
             position: relative;
             z-index: 1;
         }
@@ -35,7 +35,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .header p { color: #64748b; font-size: .9rem; }
+        .header p { color: #64748b; font-size: .9rem; margin-bottom: 20px; }
         .back-btn {
             display: inline-block;
             margin-bottom: 20px;
@@ -53,7 +53,7 @@
         .search-bar {
             width: 100%;
             max-width: 500px;
-            margin: 20px auto;
+            margin: 0 auto 30px;
             display: block;
             padding: 14px 20px;
             background: rgba(15,23,42,.85);
@@ -72,7 +72,6 @@
             gap: 16px;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
             position: relative;
             z-index: 1;
         }
@@ -81,13 +80,17 @@
             backdrop-filter: blur(16px);
             border: 1px solid rgba(99,102,241,.2);
             border-radius: 14px;
-            padding: 20px;
+            padding: 20px 15px;
             text-align: center;
             transition: all .2s;
             cursor: pointer;
             text-decoration: none;
             color: #e2e8f0;
-            display: block;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100px;
         }
         .game-card:hover {
             transform: translateY(-4px);
@@ -95,30 +98,31 @@
             box-shadow: 0 8px 25px rgba(0,0,0,.4);
         }
         .game-icon {
-            width: 50px;
-            height: 50px;
-            margin: 0 auto 12px;
+            width: 40px;
+            height: 40px;
+            margin-bottom: 10px;
             background: linear-gradient(135deg, #6366f1, #0ea5e9);
-            border-radius: 12px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
         }
-        .game-card h3 { font-size: .9rem; font-weight: 600; margin-bottom: 4px; }
-        .game-card span { font-size: .75rem; color: #64748b; }
+        .game-card h3 { font-size: .85rem; font-weight: 600; line-height: 1.3; }
         .no-results {
             text-align: center;
             padding: 60px 20px;
             color: #64748b;
             font-size: 1.1rem;
             display: none;
+            position: relative;
+            z-index: 1;
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <a href="/" class="back-btn">← Back to Dashboard</a>
+        <a href="https://hardmath.online" class="back-btn">← Back to Dashboard</a>
         <h1>🎮 Game Library</h1>
         <p>Select a game to play</p>
         <input type="text" class="search-bar" id="search" placeholder="Search games..." autocomplete="off">
@@ -127,102 +131,14 @@
     <div class="no-results" id="noResults">No games found matching your search.</div>
 
     <script>
-        const games = [
-            { name: "2048", folder: "2048", category: "Puzzle" },
-            { name: "2048 Multitask", folder: "2048-multitask", category: "Puzzle" },
-            { name: "8 Ball Billiards", folder: "8ball-billards-classic", category: "Sports" },
-            { name: "A Dark Room", folder: "adarkroom", category: "Adventure" },
-            { name: "Achievement Unlocked", folder: "achievementunlocked", category: "Puzzle" },
-            { name: "Age of War", folder: "age-of-war", category: "Strategy" },
-            { name: "Alien Invaders IO", folder: "alien-invaders-io", category: "Action" },
-            { name: "Alien Hominid", folder: "alienhominid", category: "Action" },
-            { name: "Align 4", folder: "align-4", category: "Puzzle" },
-            { name: "Among Us", folder: "among-us", category: "Social" },
-            { name: "Angry Birds", folder: "angry-birds", category: "Action" },
-            { name: "Asteroids", folder: "asteroids", category: "Classic" },
-            { name: "Awesome Tanks 2", folder: "awesome-tanks-2", category: "Action" },
-            { name: "Backrooms", folder: "backrooms", category: "Horror" },
-            { name: "Bad Ice Cream", folder: "bad-ice-cream", category: "Arcade" },
-            { name: "Bad Ice Cream 2", folder: "bad-ice-cream-2", category: "Arcade" },
-            { name: "Bad Ice Cream 3", folder: "bad-ice-cream-3", category: "Arcade" },
-            { name: "Baldi's Basics", folder: "baldis-basics", category: "Horror" },
-            { name: "Basketball Stars", folder: "basketball-stars", category: "Sports" },
-            { name: "Basketball Legends 2020", folder: "basketball-legends-2020", category: "Sports" },
-            { name: "Binding of Isaac", folder: "binding-of-isaac", category: "Action" },
-            { name: "Bitlife", folder: "bitlife", category: "Simulation" },
-            { name: "Bloons TD", folder: "bloonstd", category: "Strategy" },
-            { name: "Bloons TD 2", folder: "bloonstd2", category: "Strategy" },
-            { name: "Bloons TD 4", folder: "btd4", category: "Strategy" },
-            { name: "Bloxors", folder: "bloxors", category: "Puzzle" },
-            { name: "Boxel Rebound", folder: "boxel-rebound", category: "Platformer" },
-            { name: "Boxhead", folder: "boxhead2play", category: "Action" },
-            { name: "Breaking the Bank", folder: "breakingthebank", category: "Adventure" },
-            { name: "Breakout", folder: "breakout", category: "Classic" },
-            { name: "Chess", folder: "chess", category: "Strategy" },
-            { name: "Chrome Dino", folder: "chrome-dino", category: "Classic" },
-            { name: "Cluster Rush", folder: "cluster-rush", category: "Action" },
-            { name: "Cookie Clicker", folder: "cookie-clicker", category: "Idle" },
-            { name: "Crossy Road", folder: "crossyroad", category: "Arcade" },
-            { name: "Cut the Rope", folder: "cuttherope", category: "Puzzle" },
-            { name: "Cut the Rope 2", folder: "cuttherope2", category: "Puzzle" },
-            { name: "Dadish", folder: "dadish", category: "Platformer" },
-            { name: "Dadish 2", folder: "dadishtwo", category: "Platformer" },
-            { name: "Dadish 3", folder: "dadish3", category: "Platformer" },
-            { name: "Death Run 3D", folder: "death-run-3d", category: "Action" },
-            { name: "Doge Miner 2", folder: "doge-miner-2", category: "Idle" },
-            { name: "Doodle Jump", folder: "doodle-jump", category: "Arcade" },
-            { name: "Drive Mad", folder: "drive-mad", category: "Racing" },
-            { name: "Duck Life", folder: "ducklife", category: "Racing" },
-            { name: "Duck Life 2", folder: "ducklife2", category: "Racing" },
-            { name: "Duck Life 3", folder: "ducklife3", category: "Racing" },
-            { name: "Duck Life 4", folder: "ducklife4", category: "Racing" },
-            { name: "Edge Surf", folder: "edge-surf", category: "Arcade" },
-            { name: "Escaping the Prison", folder: "escapingtheprison", category: "Adventure" },
-            { name: "Factory Balls", folder: "factoryballs", category: "Puzzle" },
-            { name: "Fireboy & Watergirl", folder: "fireboywatergirlforesttemple", category: "Platformer" },
-            { name: "Flappy Bird", folder: "flappy-bird", category: "Arcade" },
-            { name: "Friday Night Funkin", folder: "fridaynightfunkin", category: "Music" },
-            { name: "Fruit Ninja", folder: "fruitninja", category: "Arcade" },
-            { name: "Geometry Dash", folder: "geometrydash", category: "Platformer" },
-            { name: "Getaway Shootout", folder: "getaway-shootout", category: "Action" },
-            { name: "Getting Over It", folder: "getting-over-it", category: "Platformer" },
-            { name: "Google Snake", folder: "google-snake", category: "Classic" },
-            { name: "Google Solitaire", folder: "google-solitaire", category: "Classic" },
-            { name: "Grindcraft", folder: "grindcraft", category: "Idle" },
-            { name: "Gun Mayhem", folder: "gun-mayhem", category: "Action" },
-            { name: "Gun Mayhem 2", folder: "gun-mayhem-2", category: "Action" },
-            { name: "Happy Wheels", folder: "happy-wheels", category: "Action" },
-            { name: "Hex Empire", folder: "hexempire", category: "Strategy" },
-            { name: "Hextris", folder: "hextris", category: "Puzzle" },
-            { name: "House of Hazards", folder: "house-of-hazards", category: "Action" },
-            { name: "Idle Breakout", folder: "idle-breakout", category: "Idle" },
-            { name: "Impossible Quiz", folder: "impossiblequiz", category: "Puzzle" },
-            { name: "Interactive Buddy", folder: "interactivebuddy", category: "Simulation" },
-            { name: "Jetpack", folder: "jetpack", category: "Action" },
-            { name: "Just Fall", folder: "justfall", category: "Multiplayer" },
-            { name: "Krunker", folder: "krunker", category: "FPS" },
-            { name: "Learn to Fly", folder: "learntofly", category: "Action" },
-            { name: "Learn to Fly 2", folder: "learntofly2", category: "Action" },
-            { name: "Line Rider", folder: "line-rider", category: "Creative" },
-            { name: "Madalin Stunt Cars 2", folder: "madalin-stunt-cars-2", category: "Racing" },
-            { name: "Madalin Stunt Cars 3", folder: "madalin-stunt-cars-3", category: "Racing" },
-            { name: "Minecraft", folder: "craftmine", category: "Sandbox" },
-            { name: "Retro Bowl", folder: "retro-bowl", category: "Sports" },
-            { name: "Run 3", folder: "run3", category: "Platformer" },
-            { name: "Slope", folder: "slope", category: "Arcade" },
-            { name: "Snake", folder: "snake", category: "Classic" },
-            { name: "Tetris", folder: "flashtetris", category: "Classic" },
-            { name: "Vex 5", folder: "vex5", category: "Platformer" },
-            { name: "World's Hardest Game", folder: "worlds-hardest-game", category: "Puzzle" }
-        ];
+        const rawSlugs = '1|100ng|10-minutes-till-dawn|1v1lol|1v1space|2020-game|2048|2048-multitask|8ball-billards-classic|9007199254740992|achievementunlocked|adarkroom|adrenalinechallenge|age-of-war|alienhominid|alien-invaders-io|align-4|among-us|angry-birds|anti-terrorist-rush|arcade-wizard|asciispace|aspiring-artist|asteroids|astray|avalanche|awesome-tanks-2|backcountry|backflip-dive-3d|backrooms|bad-ice-cream|bad-ice-cream-2|bad-ice-cream-3|baldis-basics|basketball-io|basketball-legends-2020|basketball-stars|basket-bros-io|battleforgondor|bigredbutton|binding-of-isaac|bitlife|blacholesquare|blackholesquare|blackknight|blocky-snakes|bloonstd|bloonstd2|bloxors|bounceback|boxel-rebound|boxhead2play|brave-explorers|breakingthebank|breaklock|breakout|btd4|btts|burning-man-2|cannon-basketball-4|canyondefense|captaincallisto|cars-simulator|cell-machine|championarcher|chess|chill-radio|chromaincident|chromedino|chrome-dino|circlo|city-blocks-2|clean-up-io|cluster-rush|color-switch-2-challenges|connect3|cookieclicker|cookie-clicker|core-ball|craftmine|creativekillchamber|crossyroad|crowd city 2|csgo-clicker|ctr|ctr-holiday|ctr-tr|cubefield|cupcake2048|cuttherope|cuttherope2|dadish|dadish3|dadishtwo|dante|deal-or-no-deal|deathrun|death-run-3d|death-soul|defend-the-tank|dino|doctor-acorn2|dodge|doge2048|DogeMiner|doge-miner-2|doge-mining-simulator|doodle-jump|doublewires|douchebag-workout-2|dragon-vs-bricks|draw-the-hill|drive-mad|ducklife|ducklife1|ducklife2|ducklife3|ducklife4|duck-life-treasurehunt|duke-dashington-remastered|dungeon-craft|edgenotfound|edge-surf|elastic-face|elasticman|emulator-js|endlesswar3|escapingtheprison|evilglitch|evil-glitch|evolution|exo|factoryballs|factoryballsforever|factory-balls-forever|fake-virus|fancypantsadventures|fbwg|finns-fantastic-food-machine|fireboywatergirlforesttemple|fireice|firewater|flappy-2048|flappybird|flappy-bird|flappy-defense|flashtetris|flippy-fish|flood-runner-2|fridaynightfunkin|friendlyfire|froggys-battle|fruitninja|frying-nemo|game-inside|generic-fishing-game|geodash|geodash-2|geometry_jump_sketchy|geometrydash|georgeandtheprinter|getaway-shootout|getting-over-it|gimme-the-airpod|glass-city|go-ball|golf|goodnight|google-snake|gopher|gravity-soccer|green|greybox|grindcraft|grow-in-the-hole|gun-mayhem|gun-mayhem-2|gun-mayhem-redux|gunspin|hackertype|happy-hop|happy-wheels|hba|helicopter|helios|hexempire|HexGL|hextris|house-of-hazards|icys-purple-head|idle-breakout|idle-shark|impossiblequiz|interactivebuddy|iscribble-io|jelly-truck|jetpack|jimothy-piggerton|justfall|just-one-boss|kart-fight-io|kitchen-gun-game|kittencannon|klocki|konnekt|krunker|learntofly|learntofly2|line-rider|linquest|madalin-stunt-cars-2|madalin-stunt-cars-3|makeitmeme|mario|marvinspectrum|matrixrampage|mc1.5.2|mcbeta0.30|mcbeta1.3|meat-boy|meme2048|minecraft|minecraftbeta|minecraft-classic|minesweeper|miniputt|mini-stilts|missiles|motox3m|motox3m2|moto-x3m-2|motox3m-pool|moto-x3m-pool-party|motox3m-spooky|motox3mwinter|motox3m-winter|my-friend-pedro|n-gon|ninja|ninjavsevilcorp|ns-shaft|OfflineParadise|om-bounce|one-screen-run|one-screen-run-2|osu|ovo|packabunchas|pacman|pacman-fps|pandemic2|papa-louie|papasburgeria|papas-burgeria|papas-freezeria|papas-hot-doggeria|papas-pancakeria|papaspizzaria|papas-pizzeria|papas-sushiria|papas-wingeria|paperio2|papery-planes|particleclicker|particle-clicker|path-finder|pe-noire|pikwip|pixel-cave|pizzeria-simulator|polybranch|popcat-classic|portalflash|precision-client|protektor|pushback|push-the-square|push-your-luck|puzzle-ball|pvz-2|q1k3|racer|radiusraid|retrobowl|retro-bowl|retrohaunt|rise-of-neon-square|roadblocks|rocking-sky-trip|rolling-forests|rolly-vortex|rooftop-snipers|run3|run-3|sandboxels|sand-game|scrambled-eggs|scrapmetal|senya-and-oscar-2|sg|shadow-world-adventure|shards|shift-flash|shift-flash-2|short-life-2|short-ride|shuttledeck|skyblock|sleepingbeauty|slice-of-sasha|slither|slither snake|slope|slope2|slope-ball|sm63|sm64|smashkarts|smokingbarrels|snake|snowbattle|soldier-legend|solitaire|sort-the-court|soundboard|spacecompany|space-company|spacegarden|spacehuggers|spelunky|ssf|stack|stack-bump-3d|station-141|stealingthediamond|stick-archers-battle|stickclimb|stickman|stickman-boost|stickman-dismount|stickman-epic-battle|stickman-golf|Stickman-Survival|stickwar|stormthehouse2|subway-surfers|subway-surfers-bali|superhero-io|superhot|supermarioconstruct|super-mario-maker-online|super-puffer-fish-3d|swerve|synesthesia|tacticalassasin2|tactical-weapon-pack-2|tail-of-the-dragon|tank-trouble-2|tanuki-sunset|temple-run-2|tetris|thebattle|the-final-earth|the-final-earth-2|theheist|the-impossible-quiz|the-impossible-quiz-2|the-little-giant|themazeofspacegoblins|there-is-no-game|thisistheonlylevel|time-shooter-3|tiny-fishing|tiny-fragments|tiny-islands|topple-adventure|tosstheturtle|tough-growth|towermaster|townscaper|trimps|tube-jumpers|tunnel-rush|tunnelz|tv-static|twitch-tetris|underrun|unfold-2|up-left-out|veloce|vex3|vex4|vex5|vex6|vex7|waterworks|webretro|winter-falling-price|wipo|wolf3d|wordle|worlds-hardest-game|worlds-hardest-game-2|x-trial-racing|xx142-b2exe|yoshifabrication|you-are-bezos|zig-zag|zombocalypse|zombs-royale';
 
-        const icons = {
-            "Puzzle": "🧩", "Sports": "⚽", "Adventure": "🗺️", "Strategy": "♟️",
-            "Action": "⚔️", "Social": "👥", "Classic": "👾", "Horror": "👻",
-            "Arcade": "🕹️", "Simulation": "💻", "Platformer": "🏃", "Idle": "⏳",
-            "Racing": "🏎️", "Music": "🎵", "Creative": "🎨", "Multiplayer": "🌐",
-            "FPS": "🔫", "Sandbox": "⛏️"
-        };
+        const games = rawSlugs.split('|').filter(Boolean).map(slug => {
+            return {
+                slug: slug,
+                title: slug.replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim().replace(/\b([a-z])/g, (m, ch) => ch.toUpperCase())
+            };
+        });
 
         const grid = document.getElementById('gameGrid');
         const search = document.getElementById('search');
@@ -237,14 +153,13 @@
             grid.innerHTML = '';
             noResults.style.display = filtered.length === 0 ? 'block' : 'none';
             
-            filtered.sort((a, b) => a.name.localeCompare(b.name)).forEach(game => {
+            filtered.sort((a, b) => a.title.localeCompare(b.title)).forEach(game => {
                 const card = document.createElement('a');
                 card.className = 'game-card';
-                card.href = './' + game.folder + '/';
+                card.href = './' + game.slug + '/';
                 card.innerHTML = `
-                    <div class="game-icon">${icons[game.category] || '🎮'}</div>
-                    <h3>${game.name}</h3>
-                    <span>${game.category}</span>
+                    <div class="game-icon">🎮</div>
+                    <h3>${game.title}</h3>
                 `;
                 grid.appendChild(card);
             });

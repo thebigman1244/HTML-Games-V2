@@ -164,7 +164,7 @@
 <body>
     <div class="topbar">
         <div class="topbar-left">
-            <a href="./" class="back-btn">← Back</a>
+            <a href="../" class="back-btn">← Back to Dashboard</a>
             <span class="game-title" id="gameTitle">Loading...</span>
         </div>
         <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
@@ -176,26 +176,22 @@
             <h1>AP Physics 1 — Kinematics</h1>
             <span>Unit 1 | Chapter 2: Motion in One Dimension</span>
         </div>
-
         <div class="section-title">1. Displacement &amp; Distance</div>
         <p><b>Displacement (Δx)</b> is the change in position of an object. It is a vector quantity, meaning it has both magnitude and direction.</p>
         <div class="formula">Δx = x<sub>f</sub> − x<sub>i</sub></div>
         <p><b>Distance</b> is the total path length traveled. It is a scalar quantity (magnitude only).</p>
         <div class="example"><b>Example:</b> A student walks 5 m east, then 3 m west. Distance = 8 m, Displacement = +2 m east.</div>
-
         <div class="section-title">2. Velocity &amp; Speed</div>
         <p><b>Average velocity</b> is displacement divided by elapsed time:</p>
         <div class="formula">v<sub>avg</sub> = Δx / Δt</div>
         <p><b>Average speed</b> is total distance divided by elapsed time:</p>
         <div class="formula">speed<sub>avg</sub> = total distance / Δt</div>
         <div class="step"><b>Key Distinction:</b> Velocity is a vector (includes direction), speed is a scalar. An object returning to its starting point has v<sub>avg</sub> = 0 but speed > 0.</div>
-
         <div class="section-title">3. Acceleration</div>
         <p><b>Acceleration (a)</b> is the rate of change of velocity:</p>
         <div class="formula">a = Δv / Δt = (v<sub>f</sub> − v<sub>i</sub>) / Δt</div>
         <p>Units: m/s². Positive acceleration means velocity is increasing in the positive direction.</p>
         <div class="example"><b>Example:</b> A car accelerates from 10 m/s to 30 m/s in 4 s. a = (30 − 10) / 4 = 5 m/s².</div>
-
         <div class="section-title">4. Kinematic Equations (Constant Acceleration)</div>
         <p>When acceleration is constant, four equations relate displacement, velocity, acceleration, and time:</p>
         <div class="formula">v<sub>f</sub> = v<sub>i</sub> + at</div>
@@ -207,7 +203,6 @@
         2. Choose the equation that contains your knowns and one unknown.<br>
         3. Solve algebraically before plugging in numbers.<br>
         4. Check units and sign conventions.</div>
-
         <div class="section-title">5. Free Fall</div>
         <p>Objects in free fall experience only the acceleration due to gravity:</p>
         <div class="formula">g = 9.8 m/s² (≈ 10 m/s² for estimation)</div>
@@ -215,7 +210,6 @@
         <div class="example"><b>Example:</b> A ball is thrown upward at 20 m/s. How high does it go?<br>
         v<sub>f</sub> = 0 at peak, a = −9.8 m/s²<br>
         v<sub>f</sub>^1^ = v<sub>i</sub>^1^ + 2aΔx → 0 = 400 + 2(−9.8)Δx → Δx ≈ 20.4 m</div>
-
         <div class="section-title">6. Newton's Laws of Motion</div>
         <p><b>First Law (Inertia):</b> An object at rest stays at rest, and an object in motion stays in motion with constant velocity, unless acted upon by a net external force.</p>
         <div class="formula">ΣF = 0 → a = 0 (equilibrium)</div>
@@ -227,7 +221,6 @@
         2. Draw all forces acting ON the object (not by the object).<br>
         3. Choose coordinate system aligned with motion.<br>
         4. Write ΣF<sub>x</sub> = ma<sub>x</sub> and ΣF<sub>y</sub> = ma<sub>y</sub>.</div>
-
         <div class="section-title">7. Friction</div>
         <p><b>Normal force (F<sub>N</sub>)</b> is the perpendicular contact force from a surface.</p>
         <p><b>Kinetic friction</b> opposes sliding motion:</p>
@@ -235,7 +228,6 @@
         <p><b>Static friction</b> prevents motion from starting:</p>
         <div class="formula">f<sub>s</sub> ≤ μ<sub>s</sub>F<sub>N</sub></div>
         <div class="step"><b>Note:</b> μ<sub>s</sub> > μ<sub>k</sub> for the same surfaces. Static friction adjusts up to its maximum value.</div>
-
         <div class="section-title">8. Practice Problem</div>
         <div class="example"><b>Problem:</b> A 5 kg block sits on a horizontal surface (μ<sub>k</sub> = 0.3). A horizontal force of 25 N is applied. Find the acceleration.<br><br>
         <b>Solution:</b><br>
@@ -243,7 +235,6 @@
         2. Friction: f<sub>k</sub> = μ<sub>k</sub>F<sub>N</sub> = 0.3(49) = 14.7 N<br>
         3. Horizontal: ΣF<sub>x</sub> = F<sub>applied</sub> − f<sub>k</sub> = 25 − 14.7 = 10.3 N<br>
         4. Acceleration: a = ΣF / m = 10.3 / 5 = 2.06 m/s²</div>
-
         <p class="close-hint">Press \\ to close this panel</p>
     </div>
 
@@ -274,6 +265,7 @@
         let isPanic = false;
         document.addEventListener('keydown', function(e) {
             if (e.key === '\\') {
+                e.preventDefault(); 
                 isPanic = !isPanic;
                 document.getElementById('panicPane').style.display = isPanic ? 'flex' : 'none';
             }

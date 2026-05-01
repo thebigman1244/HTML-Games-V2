@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HardMath | Games</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #0b1020;
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 30% 30%, rgba(99,102,241,.1), transparent 55%),
+                        radial-gradient(circle at 70% 70%, rgba(14,165,233,.1), transparent 55%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .header {
+            text-align: center;
+            padding: 30px 20px;
+            position: relative;
+            z-index: 1;
+        }
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #6366f1, #0ea5e9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .header p { color: #64748b; font-size: .9rem; }
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: rgba(99,102,241,.15);
+            border: 1px solid rgba(99,102,241,.3);
+            color: #818cf8;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: .9rem;
+            transition: all .2s;
+        }
+        .back-btn:hover { background: rgba(99,102,241,.25); }
+        .search-bar {
+            width: 100%;
+            max-width: 500px;
+            margin: 20px auto;
+            display: block;
+            padding: 14px 20px;
+            background: rgba(15,23,42,.85);
+            border: 1px solid #334155;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            position: relative;
+            z-index: 1;
+        }
+        .search-bar:focus { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,.15); }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 16px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        .game-card {
+            background: rgba(15,23,42,.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(99,102,241,.2);
+            border-radius: 14px;
+            padding: 20px;
+            text-align: center;
+            transition: all .2s;
+            cursor: pointer;
+            text-decoration: none;
+            color: #e2e8f0;
+            display: block;
+        }
+        .game-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(99,102,241,.5);
+            box-shadow: 0 8px 25px rgba(0,0,0,.4);
+        }
+        .game-icon {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 12px;
+            background: linear-gradient(135deg, #6366f1, #0ea5e9);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        .game-card h3 { font-size: .9rem; font-weight: 600; margin-bottom: 4px; }
+        .game-card span { font-size: .75rem; color: #64748b; }
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748b;
+            font-size: 1.1rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="/" class="back-btn">← Back to Dashboard</a>
+        <h1>🎮 Game Library</h1>
+        <p>Select a game to play</p>
+        <input type="text" class="search-bar" id="search" placeholder="Search games..." autocomplete="off">
+    </div>
+    <div class="grid" id="gameGrid"></div>
+    <div class="no-results" id="noResults">No games found matching your search.</div>
+
+    <script>
+        const games = [
+            { name: "2048", folder: "2048", category: "Puzzle" },
+            { name: "2048 Multitask", folder: "2048-multitask", category: "Puzzle" },
+            { name: "8 Ball Billiards", folder: "8ball-billards-classic", category: "Sports" },
+            { name: "A Dark Room", folder: "adarkroom", category: "Adventure" },
+            { name: "Achievement Unlocked", folder: "achievementunlocked", category: "Puzzle" },
+            { name: "Age of War", folder: "age-of-war", category: "Strategy" },
+            { name: "Alien Invaders IO", folder: "alien-invaders-io", category: "Action" },
+            { name: "Alien Hominid", folder: "alienhominid", category: "Action" },
+            { name: "Align 4", folder: "align-4", category: "Puzzle" },
+            { name: "Among Us", folder: "among-us", category: "Social" },
+            { name: "Angry Birds", folder: "angry-birds", category: "Action" },
+            { name: "Asteroids", folder: "asteroids", category: "Classic" },
+            { name: "Awesome Tanks 2", folder: "awesome-tanks-2", category: "Action" },
+            { name: "Backrooms", folder: "backrooms", category: "Horror" },
+            { name: "Bad Ice Cream", folder: "bad-ice-cream", category: "Arcade" },
+            { name: "Bad Ice Cream 2", folder: "bad-ice-cream-2", category: "Arcade" },
+            { name: "Bad Ice Cream 3", folder: "bad-ice-cream-3", category: "Arcade" },
+            { name: "Baldi's Basics", folder: "baldis-basics", category: "Horror" },
+            { name: "Basketball Stars", folder: "basketball-stars", category: "Sports" },
+            { name: "Basketball Legends 2020", folder: "basketball-legends-2020", category: "Sports" },
+            { name: "Binding of Isaac", folder: "binding-of-isaac", category: "Action" },
+            { name: "Bitlife", folder: "bitlife", category: "Simulation" },
+            { name: "Bloons TD", folder: "bloonstd", category: "Strategy" },
+            { name: "Bloons TD 2", folder: "bloonstd2", category: "Strategy" },
+            { name: "Bloons TD 4", folder: "btd4", category: "Strategy" },
+            { name: "Bloxors", folder: "bloxors", category: "Puzzle" },
+            { name: "Boxel Rebound", folder: "boxel-rebound", category: "Platformer" },
+            { name: "Boxhead", folder: "boxhead2play", category: "Action" },
+            { name: "Breaking the Bank", folder: "breakingthebank", category: "Adventure" },
+            { name: "Breakout", folder: "breakout", category: "Classic" },
+            { name: "Chess", folder: "chess", category: "Strategy" },
+            { name: "Chrome Dino", folder: "chrome-dino", category: "Classic" },
+            { name: "Cluster Rush", folder: "cluster-rush", category: "Action" },
+            { name: "Cookie Clicker", folder: "cookie-clicker", category: "Idle" },
+            { name: "Crossy Road", folder: "crossyroad", category: "Arcade" },
+            { name: "Cut the Rope", folder: "cuttherope", category: "Puzzle" },
+            { name: "Cut the Rope 2", folder: "cuttherope2", category: "Puzzle" },
+            { name: "Dadish", folder: "dadish", category: "Platformer" },
+            { name: "Dadish 2", folder: "dadishtwo", category: "Platformer" },
+            { name: "Dadish 3", folder: "dadish3", category: "Platformer" },
+            { name: "Death Run 3D", folder: "death-run-3d", category: "Action" },
+            { name: "Doge Miner 2", folder: "doge-miner-2", category: "Idle" },
+            { name: "Doodle Jump", folder: "doodle-jump", category: "Arcade" },
+            { name: "Drive Mad", folder: "drive-mad", category: "Racing" },
+            { name: "Duck Life", folder: "ducklife", category: "Racing" },
+            { name: "Duck Life 2", folder: "ducklife2", category: "Racing" },
+            { name: "Duck Life 3", folder: "ducklife3", category: "Racing" },
+            { name: "Duck Life 4", folder: "ducklife4", category: "Racing" },
+            { name: "Edge Surf", folder: "edge-surf", category: "Arcade" },
+            { name: "Escaping the Prison", folder: "escapingtheprison", category: "Adventure" },
+            { name: "Factory Balls", folder: "factoryballs", category: "Puzzle" },
+            { name: "Fireboy & Watergirl", folder: "fireboywatergirlforesttemple", category: "Platformer" },
+            { name: "Flappy Bird", folder: "flappy-bird", category: "Arcade" },
+            { name: "Friday Night Funkin", folder: "fridaynightfunkin", category: "Music" },
+            { name: "Fruit Ninja", folder: "fruitninja", category: "Arcade" },
+            { name: "Geometry Dash", folder: "geometrydash", category: "Platformer" },
+            { name: "Getaway Shootout", folder: "getaway-shootout", category: "Action" },
+            { name: "Getting Over It", folder: "getting-over-it", category: "Platformer" },
+            { name: "Google Snake", folder: "google-snake", category: "Classic" },
+            { name: "Google Solitaire", folder: "google-solitaire", category: "Classic" },
+            { name: "Grindcraft", folder: "grindcraft", category: "Idle" },
+            { name: "Gun Mayhem", folder: "gun-mayhem", category: "Action" },
+            { name: "Gun Mayhem 2", folder: "gun-mayhem-2", category: "Action" },
+            { name: "Happy Wheels", folder: "happy-wheels", category: "Action" },
+            { name: "Hex Empire", folder: "hexempire", category: "Strategy" },
+            { name: "Hextris", folder: "hextris", category: "Puzzle" },
+            { name: "House of Hazards", folder: "house-of-hazards", category: "Action" },
+            { name: "Idle Breakout", folder: "idle-breakout", category: "Idle" },
+            { name: "Impossible Quiz", folder: "impossiblequiz", category: "Puzzle" },
+            { name: "Interactive Buddy", folder: "interactivebuddy", category: "Simulation" },
+            { name: "Jetpack", folder: "jetpack", category: "Action" },
+            { name: "Just Fall", folder: "justfall", category: "Multiplayer" },
+            { name: "Krunker", folder: "krunker", category: "FPS" },
+            { name: "Learn to Fly", folder: "learntofly", category: "Action" },
+            { name: "Learn to Fly 2", folder: "learntofly2", category: "Action" },
+            { name: "Line Rider", folder: "line-rider", category: "Creative" },
+            { name: "Madalin Stunt Cars 2", folder: "madalin-stunt-cars-2", category: "Racing" },
+            { name: "Madalin Stunt Cars 3", folder: "madalin-stunt-cars-3", category: "Racing" },
+            { name: "Minecraft", folder: "craftmine", category: "Sandbox" },
+            { name: "Retro Bowl", folder: "retro-bowl", category: "Sports" },
+            { name: "Run 3", folder: "run3", category: "Platformer" },
+            { name: "Slope", folder: "slope", category: "Arcade" },
+            { name: "Snake", folder: "snake", category: "Classic" },
+            { name: "Tetris", folder: "flashtetris", category: "Classic" },
+            { name: "Vex 5", folder: "vex5", category: "Platformer" },
+            { name: "World's Hardest Game", folder: "worlds-hardest-game", category: "Puzzle" }
+        ];
+
+        const icons = {
+            "Puzzle": "🧩", "Sports": "⚽", "Adventure": "🗺️", "Strategy": "♟️",
+            "Action": "⚔️", "Social": "👥", "Classic": "👾", "Horror": "👻",
+            "Arcade": "🕹️", "Simulation": "💻", "Platformer": "🏃", "Idle": "⏳",
+            "Racing": "🏎️", "Music": "🎵", "Creative": "🎨", "Multiplayer": "🌐",
+            "FPS": "🔫", "Sandbox": "⛏️"
+        };
+
+        const grid = document.getElementById('gameGrid');
+        const search = document.getElementById('search');
+        const noResults = document.getElementById('noResults');
+
+        function renderGames(filter = '') {
+            const filtered = games.filter(g => 
+                g.name.toLowerCase().includes(filter.toLowerCase()) ||
+                g.category.toLowerCase().includes(filter.toLowerCase())
+            );
+            
+            grid.innerHTML = '';
+            noResults.style.display = filtered.length === 0 ? 'block' : 'none';
+            
+            filtered.sort((a, b) => a.name.localeCompare(b.name)).forEach(game => {
+                const card = document.createElement('a');
+                card.className = 'game-card';
+                card.href = './' + game.folder + '/';
+                card.innerHTML = `
+                    <div class="game-icon">${icons[game.category] || '🎮'}</div>
+                    <h3>${game.name}</h3>
+                    <span>${game.category}</span>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        search.addEventListener('input', (e) => renderGames(e.target.value));
+        renderGames();
+    </script>
+</body>
+</html>

@@ -164,7 +164,7 @@
 <body>
     <div class="topbar">
         <div class="topbar-left">
-            <a href="../" class="back-btn">← Back to Dashboard</a>
+            <a href="/" class="back-btn">← Back to Dashboard</a>
             <span class="game-title" id="gameTitle">Loading...</span>
         </div>
         <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
@@ -251,7 +251,7 @@
             gameFrame.src = './' + encodeURIComponent(gameSlug) + '/';
         } else {
             gameTitle.textContent = 'No game selected';
-            window.location.href = './';
+            window.location.href = '/';
         }
 
         function toggleFullscreen() {

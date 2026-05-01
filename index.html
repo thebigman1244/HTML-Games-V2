@@ -119,6 +119,102 @@
             position: relative;
             z-index: 1;
         }
+        #panicPane {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: #fafbff;
+            color: #1a1a1a;
+            z-index: 9999;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 30px 40px;
+            font-family: Georgia, 'Times New Roman', serif;
+            overflow-y: auto;
+        }
+        #panicPane h1 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+            color: #111;
+            text-align: center;
+        }
+        #panicPane h2 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: #333;
+            font-weight: 400;
+            text-align: center;
+        }
+        #panicPane .formula {
+            font-size: 1.6rem;
+            margin: 12px 0;
+            padding: 14px 20px;
+            background: #eef2ff;
+            border-radius: 10px;
+            border: 1px dashed #6366f1;
+            text-align: center;
+            width: 100%;
+            max-width: 650px;
+        }
+        #panicPane p {
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 12px;
+            max-width: 650px;
+            text-align: left;
+        }
+        #panicPane .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #4f46e5;
+            margin: 25px 0 10px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #e0e7ff;
+            width: 100%;
+            max-width: 650px;
+        }
+        #panicPane .step {
+            background: #f3f4f6;
+            padding: 14px 16px;
+            border-radius: 8px;
+            margin: 8px 0;
+            width: 100%;
+            max-width: 650px;
+            text-align: left;
+            line-height: 1.6;
+        }
+        #panicPane .step b { color: #4f46e5; }
+        #panicPane .example {
+            background: #fefce8;
+            border: 1px solid #fde68a;
+            padding: 14px 16px;
+            border-radius: 8px;
+            margin: 10px 0;
+            width: 100%;
+            max-width: 650px;
+            text-align: left;
+            line-height: 1.6;
+        }
+        #panicPane .example b { color: #b45309; }
+        #panicPane .close-hint {
+            margin-top: 30px;
+            color: #999;
+            font-size: .8rem;
+            text-align: center;
+        }
+        #panicPane .header-bar {
+            width: 100%;
+            max-width: 650px;
+            border-bottom: 3px solid #4f46e5;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        #panicPane .header-bar span {
+            font-size: .85rem;
+            color: #6b7280;
+        }
     </style>
 </head>
 <body>
@@ -130,6 +226,73 @@
     </div>
     <div class="grid" id="gameGrid"></div>
     <div class="no-results" id="noResults">No games found matching your search.</div>
+
+    <div id="panicPane">
+        <div class="header-bar">
+            <h1>AP Physics 1 — Kinematics</h1>
+            <span>Unit 1 | Chapter 2: Motion in One Dimension</span>
+        </div>
+        <div class="section-title">1. Displacement &amp; Distance</div>
+        <p><b>Displacement (Δx)</b> is the change in position of an object. It is a vector quantity, meaning it has both magnitude and direction.</p>
+        <div class="formula">Δx = x<sub>f</sub> − x<sub>i</sub></div>
+        <p><b>Distance</b> is the total path length traveled. It is a scalar quantity (magnitude only).</p>
+        <div class="example"><b>Example:</b> A student walks 5 m east, then 3 m west. Distance = 8 m, Displacement = +2 m east.</div>
+        <div class="section-title">2. Velocity &amp; Speed</div>
+        <p><b>Average velocity</b> is displacement divided by elapsed time:</p>
+        <div class="formula">v<sub>avg</sub> = Δx / Δt</div>
+        <p><b>Average speed</b> is total distance divided by elapsed time:</p>
+        <div class="formula">speed<sub>avg</sub> = total distance / Δt</div>
+        <div class="step"><b>Key Distinction:</b> Velocity is a vector (includes direction), speed is a scalar. An object returning to its starting point has v<sub>avg</sub> = 0 but speed > 0.</div>
+        <div class="section-title">3. Acceleration</div>
+        <p><b>Acceleration (a)</b> is the rate of change of velocity:</p>
+        <div class="formula">a = Δv / Δt = (v<sub>f</sub> − v<sub>i</sub>) / Δt</div>
+        <p>Units: m/s². Positive acceleration means velocity is increasing in the positive direction.</p>
+        <div class="example"><b>Example:</b> A car accelerates from 10 m/s to 30 m/s in 4 s. a = (30 − 10) / 4 = 5 m/s².</div>
+        <div class="section-title">4. Kinematic Equations (Constant Acceleration)</div>
+        <p>When acceleration is constant, four equations relate displacement, velocity, acceleration, and time:</p>
+        <div class="formula">v<sub>f</sub> = v<sub>i</sub> + at</div>
+        <div class="formula">Δx = v<sub>i</sub>t + ½at²</div>
+        <div class="formula">v<sub>f</sub>^1^ = v<sub>i</sub>^1^ + 2aΔx</div>
+        <div class="formula">Δx = ½(v<sub>i</sub> + v<sub>f</sub>)t</div>
+        <div class="step"><b>Problem-Solving Strategy:</b><br>
+        1. Identify known variables (v<sub>i</sub>, v<sub>f</sub>, a, t, Δx).<br>
+        2. Choose the equation that contains your knowns and one unknown.<br>
+        3. Solve algebraically before plugging in numbers.<br>
+        4. Check units and sign conventions.</div>
+        <div class="section-title">5. Free Fall</div>
+        <p>Objects in free fall experience only the acceleration due to gravity:</p>
+        <div class="formula">g = 9.8 m/s² (≈ 10 m/s² for estimation)</div>
+        <p>Use kinematic equations with a = −g (if up is positive) or a = g (if down is positive).</p>
+        <div class="example"><b>Example:</b> A ball is thrown upward at 20 m/s. How high does it go?<br>
+        v<sub>f</sub> = 0 at peak, a = −9.8 m/s²<br>
+        v<sub>f</sub>^1^ = v<sub>i</sub>^1^ + 2aΔx → 0 = 400 + 2(−9.8)Δx → Δx ≈ 20.4 m</div>
+        <div class="section-title">6. Newton's Laws of Motion</div>
+        <p><b>First Law (Inertia):</b> An object at rest stays at rest, and an object in motion stays in motion with constant velocity, unless acted upon by a net external force.</p>
+        <div class="formula">ΣF = 0 → a = 0 (equilibrium)</div>
+        <p><b>Second Law:</b> The net force on an object equals its mass times acceleration:</p>
+        <div class="formula">ΣF = ma</div>
+        <p><b>Third Law:</b> For every action, there is an equal and opposite reaction. Forces always come in pairs on different objects.</p>
+        <div class="step"><b>Free-Body Diagram Tips:</b><br>
+        1. Isolate the object of interest.<br>
+        2. Draw all forces acting ON the object (not by the object).<br>
+        3. Choose coordinate system aligned with motion.<br>
+        4. Write ΣF<sub>x</sub> = ma<sub>x</sub> and ΣF<sub>y</sub> = ma<sub>y</sub>.</div>
+        <div class="section-title">7. Friction</div>
+        <p><b>Normal force (F<sub>N</sub>)</b> is the perpendicular contact force from a surface.</p>
+        <p><b>Kinetic friction</b> opposes sliding motion:</p>
+        <div class="formula">f<sub>k</sub> = μ<sub>k</sub>F<sub>N</sub></div>
+        <p><b>Static friction</b> prevents motion from starting:</p>
+        <div class="formula">f<sub>s</sub> ≤ μ<sub>s</sub>F<sub>N</sub></div>
+        <div class="step"><b>Note:</b> μ<sub>s</sub> > μ<sub>k</sub> for the same surfaces. Static friction adjusts up to its maximum value.</div>
+        <div class="section-title">8. Practice Problem</div>
+        <div class="example"><b>Problem:</b> A 5 kg block sits on a horizontal surface (μ<sub>k</sub> = 0.3). A horizontal force of 25 N is applied. Find the acceleration.<br><br>
+        <b>Solution:</b><br>
+        1. Vertical: ΣF<sub>y</sub> = 0 → F<sub>N</sub> = mg = 5(9.8) = 49 N<br>
+        2. Friction: f<sub>k</sub> = μ<sub>k</sub>F<sub>N</sub> = 0.3(49) = 14.7 N<br>
+        3. Horizontal: ΣF<sub>x</sub> = F<sub>applied</sub> − f<sub>k</sub> = 25 − 14.7 = 10.3 N<br>
+        4. Acceleration: a = ΣF / m = 10.3 / 5 = 2.06 m/s²</div>
+        <p class="close-hint">Press \\ to close this panel</p>
+    </div>
 
     <script>
         const gameIcons = {
@@ -296,6 +459,15 @@
 
         search.addEventListener('input', (e) => renderGames(e.target.value));
         renderGames();
+
+        let isPanic = false;
+        document.addEventListener('keydown', function(e) {
+            if (e.key === '\\') {
+                e.preventDefault(); 
+                isPanic = !isPanic;
+                document.getElementById('panicPane').style.display = isPanic ? 'flex' : 'none';
+            }
+        });
     </script>
 </body>
 </html>

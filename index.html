@@ -74,6 +74,7 @@
             margin: 0 auto;
             position: relative;
             z-index: 1;
+            padding-bottom: 40px;
         }
         .game-card {
             background: rgba(15,23,42,.85);
@@ -122,7 +123,7 @@
 </head>
 <body>
     <div class="header">
-        <a href="https://hardmath.online" class="back-btn">← Back to Dashboard</a>
+        <a href="/" class="back-btn">← Back to Dashboard</a>
         <h1>🎮 Game Library</h1>
         <p>Select a game to play</p>
         <input type="text" class="search-bar" id="search" placeholder="Search games..." autocomplete="off">
@@ -136,7 +137,7 @@
         const games = rawSlugs.split('|').filter(Boolean).map(slug => {
             return {
                 slug: slug,
-                title: slug.replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim().replace(/\b([a-z])/g, (m, ch) => ch.toUpperCase())
+                title: slug.replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim().replace(/\b\w/g, c => c.toUpperCase())
             };
         });
 
@@ -146,8 +147,8 @@
 
         function renderGames(filter = '') {
             const filtered = games.filter(g => 
-                g.name.toLowerCase().includes(filter.toLowerCase()) ||
-                g.category.toLowerCase().includes(filter.toLowerCase())
+                g.title.toLowerCase().includes(filter.toLowerCase()) ||
+                g.slug.toLowerCase().includes(filter.toLowerCase())
             );
             
             grid.innerHTML = '';
@@ -156,7 +157,7 @@
             filtered.sort((a, b) => a.title.localeCompare(b.title)).forEach(game => {
                 const card = document.createElement('a');
                 card.className = 'game-card';
-                card.href = './' + game.slug + '/';
+                card.href = './' + encodeURIComponent(game.slug) + '/';
                 card.innerHTML = `
                     <div class="game-icon">🎮</div>
                     <h3>${game.title}</h3>

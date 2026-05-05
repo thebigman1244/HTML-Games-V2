@@ -95,6 +95,11 @@
             font-size: 1.2rem;
             margin-bottom: 5px;
         }
+        .loading {
+            text-align: center;
+            color: #6366f1;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -104,32 +109,56 @@
             <div class="lo">&#8721;</div>
             <div class="t">
                 <h1>Game Portal</h1>
-                <p>Select a game to play</p>
+                <p>Loading games from repository...</p>
             </div>
         </div>
 
-        <h3 style="margin-bottom: 15px; color: #e2e8f0;">Available Games</h3>
-        <div class="game-grid">
-            <!-- Add or remove games here based on your repo -->
-            <a href="play.html?game=snake" class="game-btn">
-                <span>🐍</span> Snake
-            </a>
-            <a href="play.html?game=breakout" class="game-btn">
-                <span>🧱</span> Breakout
-            </a>
-            <a href="play.html?game=tetris" class="game-btn">
-                <span>🧩</span> Tetris
-            </a>
-            <a href="play.html?game=pong" class="game-btn">
-                <span>🏓</span> Pong
-            </a>
-            <a href="play.html?game=tank" class="game-btn">
-                <span>🚀</span> Tank Battle
-            </a>
-            <a href="play.html?game=flappy" class="game-btn">
-                <span>🐦</span> Flappy Bird
-            </a>
+        <div class="game-grid" id="gameGrid">
+            <div class="loading">Fetching 410+ games...</div>
         </div>
     </div>
+
+    <script>
+        const repoOwner = 'thebigman1244';
+        const repoName = 'HTML-Games-V2';
+        const gameGrid = document.getElementById('gameGrid');
+
+        async function loadGames() {
+            try {
+                // Fetch the directory contents
+                const response = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/play.html?ref=main`);
+                if (!response.ok) throw new Error('Failed to fetch games');
+                
+                const data = await response.json();
+                
+                // If it's a directory
+                if (Array.isArray(data)) {
+                    renderButtons(data);
+                } else {
+                    // If it's a single file (fallback)
+                    gameGrid.innerHTML = '<div class="loading">No games found in directory. Check repo structure.</div>';
+                }
+            } catch (error) {
+                gameGrid.innerHTML = '<div class="loading">Error loading games. Please check your github link.</div>';
+                console.error(error);
+            }
+        }
+
+        function renderButtons(files) {
+            gameGrid.innerHTML = '';
+            files.forEach(file => {
+                if (file.name.endsWith('.html')) {
+                    const cleanName = file.name.replace('.html', '');
+                    const btn = document.createElement('a');
+                    btn.className = 'game-btn';
+                    btn.href = `play.html?game=${cleanName}`;
+                    btn.innerHTML = `<span>🎮</span> ${cleanName}`;
+                    gameGrid.appendChild(btn);
+                }
+            });
+        }
+
+        loadGames();
+    </script>
 </body>
 </html>

@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>HardMath | Game Portal</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https:;">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HardMath | Games</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -13,152 +12,290 @@
             color: #e2e8f0;
             min-height: 100vh;
             padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            padding-top: 40px;
         }
         body::before {
             content: "";
             position: fixed;
             inset: 0;
-            background: radial-gradient(circle at 30% 30%, rgba(99,102,241,0.1), transparent 55%), radial-gradient(circle at 70% 70%, rgba(14,165,233,0.1), transparent 55%);
+            background: radial-gradient(circle at 30% 30%, rgba(99,102,241,.1), transparent 55%),
+                        radial-gradient(circle at 70% 70%, rgba(14,165,233,.1), transparent 55%);
             pointer-events: none;
             z-index: 0;
         }
-        .c {
-            background: rgba(15,23,42,0.85);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(99,102,241,0.2);
-            border-radius: 20px;
-            padding: 35px;
-            width: 100%;
-            max-width: 800px;
+        .header {
+            text-align: center;
+            padding: 30px 20px 10px;
             position: relative;
             z-index: 1;
         }
-        .top { display: flex; justify-content: flex-end; margin-bottom: 20px; }
-        .tbtn {
-            padding: 8px 16px;
-            background: rgba(239,68,68,0.12);
-            border: 1px solid rgba(239,68,68,0.3);
-            color: #f87171;
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #6366f1, #0ea5e9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .header p { color: #64748b; font-size: .9rem; margin-bottom: 20px; }
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: rgba(99,102,241,.15);
+            border: 1px solid rgba(99,102,241,.3);
+            color: #818cf8;
             border-radius: 8px;
-            font-size: 0.85rem;
             text-decoration: none;
             font-weight: 600;
+            font-size: .9rem;
+            transition: all .2s;
         }
-        .tbtn:hover { background: rgba(239,68,68,0.2); }
-        .h { display: flex; align-items: center; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid rgba(99,102,241,0.2); }
-        .lo {
-            background: linear-gradient(135deg, #6366f1, #0ea5e9);
-            width: 56px;
-            height: 56px;
+        .back-btn:hover { background: rgba(99,102,241,.25); }
+        .search-bar {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto 30px;
+            display: block;
+            padding: 14px 20px;
+            background: rgba(15,23,42,.85);
+            border: 1px solid #334155;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            position: relative;
+            z-index: 1;
+        }
+        .search-bar:focus { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,.15); }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 16px;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            padding-bottom: 40px;
+        }
+        .game-card {
+            background: rgba(15,23,42,.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(99,102,241,.2);
             border-radius: 14px;
+            padding: 20px 15px;
+            text-align: center;
+            transition: all .2s;
+            cursor: pointer;
+            text-decoration: none;
+            color: #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 110px;
+        }
+        .game-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(99,102,241,.5);
+            box-shadow: 0 8px 25px rgba(0,0,0,.4);
+        }
+        .game-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #6366f1, #0ea5e9);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
-            font-weight: 800;
-            margin-right: 16px;
-            color: #fff;
-            font-family: 'Cambria Math', serif;
+            font-size: 1.5rem;
         }
-        .t h1 { font-size: 1.5rem; margin-bottom: 2px; font-weight: 700; }
-        .t p { color: #64748b; font-size: 0.85rem; }
-        
-        .game-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 15px;
-        }
-        
-        .game-btn {
-            background: #1e293b;
-            border: 1px solid #334155;
-            color: #e2e8f0;
-            padding: 15px;
-            border-radius: 10px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.2s;
+        .game-card h3 { font-size: .85rem; font-weight: 600; line-height: 1.3; }
+        .no-results {
             text-align: center;
-            font-size: 0.9rem;
-        }
-        .game-btn:hover {
-            background: #334155;
-            transform: translateY(-2px);
-            border-color: #6366f1;
-        }
-        .game-btn span {
-            display: block;
-            font-size: 1.2rem;
-            margin-bottom: 5px;
-        }
-        .loading {
-            text-align: center;
-            color: #6366f1;
-            margin-top: 20px;
+            padding: 60px 20px;
+            color: #64748b;
+            font-size: 1.1rem;
+            display: none;
+            position: relative;
+            z-index: 1;
         }
     </style>
 </head>
 <body>
-    <div class="c">
-        <div class="top"><a href="/?action=logout" class="tbtn">Logout</a></div>
-        <div class="h">
-            <div class="lo">&#8721;</div>
-            <div class="t">
-                <h1>Game Portal</h1>
-                <p>Loading games from repository...</p>
-            </div>
-        </div>
-
-        <div class="game-grid" id="gameGrid">
-            <div class="loading">Fetching 410+ games...</div>
-        </div>
+    <div class="header">
+        <a href="/" class="back-btn">← Back to Dashboard</a>
+        <h1>🎮 Game Library</h1>
+        <p>Select a game to play</p>
+        <input type="text" class="search-bar" id="search" placeholder="Search games..." autocomplete="off">
     </div>
+    <div class="grid" id="gameGrid"></div>
+    <div class="no-results" id="noResults">No games found matching your search.</div>
 
     <script>
-        const repoOwner = 'thebigman1244';
-        const repoName = 'HTML-Games-V2';
-        const gameGrid = document.getElementById('gameGrid');
+        const gameIcons = {
+            '1': '🎯', '100ng': '🔢', '10-minutes-till-dawn': '🌅', '1v1lol': '🔫',
+            '1v1space': '🚀', '2020-game': '📅', '2048': '🧮', '2048-multitask': '🧠',
+            '8ball-billards-classic': '🎱', '9007199254740992': '🔢', 'achievementunlocked': '🏆',
+            'adarkroom': '🌑', 'adrenalinechallenge': '⚡', 'age-of-war': '⚔️', 'alienhominid': '👽',
+            'alien-invaders-io': '👾', 'align-4': '🔴', 'among-us': '🤫', 'angry-birds': '🐦',
+            'anti-terrorist-rush': '🛡️', 'arcade-wizard': '🧙', 'asciispace': '👾',
+            'aspiring-artist': '🎨', 'asteroids': '☄️', 'astray': '🌀', 'avalanche': '🏔️',
+            'awesome-tanks-2': '🪖', 'backcountry': '🌲', 'backflip-dive-3d': '🤸',
+            'backrooms': '🏚️', 'bad-ice-cream': '🍦', 'bad-ice-cream-2': '🍨',
+            'bad-ice-cream-3': '🧊', 'baldis-basics': '📚', 'basketball-io': '🏀',
+            'basketball-legends-2020': '⛹️', 'basketball-stars': '⭐', 'basket-bros-io': '🏀',
+            'battleforgondor': '🏰', 'bigredbutton': '🔴', 'binding-of-isaac': '😢',
+            'bitlife': '👶', 'blacholesquare': '⬛', 'blackholesquare': '🕳️',
+            'blackknight': '🗡️', 'blocky-snakes': '🐍', 'bloonstd': '🎈', 'bloonstd2': '🎈',
+            'bloxors': '🧊', 'bounceback': '🏀', 'boxel-rebound': '📦', 'boxhead2play': '💀',
+            'brave-explorers': '🧭', 'breakingthebank': '🏦', 'breaklock': '🔓', 'breakout': '🧱',
+            'btd4': '🐵', 'btts': '⚽', 'burning-man-2': '🔥', 'cannon-basketball-4': '🏀',
+            'canyondefense': '🏜️', 'captaincallisto': '🚀', 'cars-simulator': '🚗',
+            'cell-machine': '🧬', 'championarcher': '🏹', 'chess': '♟️', 'chill-radio': '📻',
+            'chromaincident': '🌈', 'chromedino': '🦕', 'chrome-dino': '🦖', 'circlo': '⭕',
+            'city-blocks-2': '🏙️', 'clean-up-io': '🧹', 'cluster-rush': '💨',
+            'color-switch-2-challenges': '🎨', 'connect3': '🔗', 'cookieclicker': '🍪',
+            'cookie-clicker': '🍪', 'core-ball': '🔮', 'craftmine': '⛏️',
+            'creativekillchamber': '🚪', 'crossyroad': '🐔', 'crowd city 2': '👥',
+            'csgo-clicker': '🔫', 'ctr': '🏎️', 'ctr-holiday': '🎄', 'ctr-tr': '🏎️',
+            'cubefield': '🔷', 'cupcake2048': '🧁', 'cuttherope': '✂️', 'cuttherope2': '🍬',
+            'dadish': '🥕', 'dadish3': '🥕', 'dadishtwo': '🥕', 'dante': '😈',
+            'deal-or-no-deal': '💼', 'deathrun': '💀', 'death-run-3d': '🏃',
+            'death-soul': '👻', 'defend-the-tank': '🛡️', 'dino': '🦖', 'doctor-acorn2': '🌰',
+            'dodge': '💨', 'doge2048': '🐕', 'DogeMiner': '⛏️', 'doge-miner-2': '🐕',
+            'doge-mining-simulator': '💎', 'doodle-jump': '🐸', 'doublewires': '🧵',
+            'douchebag-workout-2': '💪', 'dragon-vs-bricks': '🐉', 'draw-the-hill': '✏️',
+            'drive-mad': '🚙', 'ducklife': '🦆', 'ducklife1': '🦆', 'ducklife2': '🦆',
+            'ducklife3': '🦆', 'ducklife4': '🦆', 'duck-life-treasurehunt': '💰',
+            'duke-dashington-remastered': '💎', 'dungeon-craft': '🏰', 'edgenotfound': '❓',
+            'edge-surf': '🏄', 'elastic-face': '😊', 'elasticman': '🤪', 'emulator-js': '🕹️',
+            'endlesswar3': '⚔️', 'escapingtheprison': '🏃', 'evilglitch': '🐛',
+            'evil-glitch': '👾', 'evolution': '🧬', 'exo': '👽', 'factoryballs': '🏭',
+            'factoryballsforever': '🏭', 'factory-balls-forever': '🏭', 'fake-virus': '🦠',
+            'fancypantsadventures': '👖', 'fbwg': '🔥', 'finns-fantastic-food-machine': '🍔',
+            'fireboywatergirlforesttemple': '🔥', 'fireice': '🧊', 'firewater': '💧',
+            'flappy-2048': '🐦', 'flappybird': '🐦', 'flappy-bird': '🐤',
+            'flappy-defense': '🛡️', 'flashtetris': '🧱', 'flippy-fish': '🐟',
+            'flood-runner-2': '🌊', 'fridaynightfunkin': '🎤', 'friendlyfire': '🔫',
+            'froggys-battle': '🐸', 'fruitninja': '🍉', 'frying-nemo': '🐟',
+            'game-inside': '🎮', 'generic-fishing-game': '🎣', 'geodash': '💎',
+            'geodash-2': '💎', 'geometry_jump_sketchy': '📐', 'geometrydash': '📐',
+            'georgeandtheprinter': '🖨️', 'getaway-shootout': '🔫', 'getting-over-it': '🔨',
+            'gimme-the-airpod': '🎧', 'glass-city': '🏙️', 'go-ball': '⚽', 'golf': '⛳',
+            'goodnight': '🌙', 'google-snake': '🐍', 'gopher': '🐹', 'gravity-soccer': '⚽',
+            'green': '🟢', 'greybox': '⬜', 'grindcraft': '⛏️', 'grow-in-the-hole': '🕳️',
+            'gun-mayhem': '💥', 'gun-mayhem-2': '💥', 'gun-mayhem-redux': '💥',
+            'gunspin': '🔫', 'hackertype': '💻', 'happy-hop': '🐰', 'happy-wheels': '♿',
+            'hba': '🏠', 'helicopter': '🚁', 'helios': '☀️', 'hexempire': '🏰',
+            'HexGL': '⬡', 'hextris': '⬡', 'house-of-hazards': '🏠', 'icys-purple-head': '🟣',
+            'idle-breakout': '🧱', 'idle-shark': '🦈', 'impossiblequiz': '❓',
+            'interactivebuddy': '🤝', 'iscribble-io': '✏️', 'jelly-truck': '🚛',
+            'jetpack': '🚀', 'jimothy-piggerton': '🐷', 'justfall': '🪂',
+            'just-one-boss': '👹', 'kart-fight-io': '🏎️', 'kitchen-gun-game': '🔫',
+            'kittencannon': '🐱', 'klocki': '🧩', 'konnekt': '🔗', 'krunker': '🔫',
+            'learntofly': '🐧', 'learntofly2': '🐧', 'line-rider': '⛷️', 'linquest': '🗡️',
+            'madalin-stunt-cars-2': '🏎️', 'madalin-stunt-cars-3': '🏎️', 'makeitmeme': '😂',
+            'mario': '🍄', 'marvinspectrum': '🌈', 'matrixrampage': '💊',
+            'mc1.5.2': '⛏️', 'mcbeta0.30': '⛏️', 'mcbeta1.3': '⛏️', 'meat-boy': '🥩',
+            'meme2048': '🤣', 'minecraft': '⛏️', 'minecraftbeta': '⛏️',
+            'minecraft-classic': '⛏️', 'minesweeper': '💣', 'miniputt': '⛳',
+            'mini-stilts': '🦿', 'missiles': '🚀', 'motox3m': '🏍️', 'motox3m2': '🏍️',
+            'moto-x3m-2': '🏍️', 'motox3m-pool': '🏊', 'moto-x3m-pool-party': '🎉',
+            'motox3m-spooky': '👻', 'motox3mwinter': '❄️', 'motox3m-winter': '⛷️',
+            'my-friend-pedro': '🍌', 'n-gon': '⬡', 'ninja': '🥷', 'ninjavsevilcorp': '🥷',
+            'ns-shaft': '⬇️', 'OfflineParadise': '🏝️', 'om-bounce': '🏀',
+            'one-screen-run': '🏃', 'one-screen-run-2': '🏃', 'osu': '🎵', 'ovo': '🥚',
+            'packabunchas': '📦', 'pacman': '🟡', 'pacman-fps': '🔫', 'pandemic2': '🦠',
+            'papa-louie': '👨‍🍳', 'papasburgeria': '🍔', 'papas-burgeria': '🍔',
+            'papas-freezeria': '🍦', 'papas-hot-doggeria': '🌭', 'papas-pancakeria': '🥞',
+            'papaspizzaria': '🍕', 'papas-pizzeria': '🍕', 'papas-sushiria': '🍣',
+            'papas-wingeria': '🍗', 'paperio2': '📄', 'papery-planes': '✈️',
+            'particleclicker': '⚛️', 'particle-clicker': '⚛️', 'path-finder': '🧭',
+            'pe-noire': '🕵️', 'pikwip': '🏔️', 'pixel-cave': '🕳️',
+            'pizzeria-simulator': '🍕', 'polybranch': '🌿', 'popcat-classic': '🐱',
+            'portalflash': '🌀', 'precision-client': '🎯', 'protektor': '🛡️',
+            'pushback': '↩️', 'push-the-square': '⬛', 'push-your-luck': '🎰',
+            'puzzle-ball': '🔮', 'pvz-2': '🧟', 'q1k3': '🔫', 'racer': '🏎️',
+            'radiusraid': '⭕', 'retrobowl': '🏈', 'retro-bowl': '🏈', 'retrohaunt': '👻',
+            'rise-of-neon-square': '🟦', 'roadblocks': '🚧', 'rocking-sky-trip': '🎸',
+            'rolling-forests': '🌲', 'rolly-vortex': '🌀', 'rooftop-snipers': '🎯',
+            'run3': '🏃', 'run-3': '🏃', 'sandboxels': '🏖️', 'sand-game': '🏖️',
+            'scrambled-eggs': '🍳', 'scrapmetal': '⚙️', 'senya-and-oscar-2': '🐱',
+            'sg': '🎮', 'shadow-world-adventure': '🌑', 'shards': '💎',
+            'shift-flash': '⚡', 'shift-flash-2': '⚡', 'short-life-2': '💀',
+            'short-ride': '🚲', 'shuttledeck': '🚀', 'skyblock': '🏝️',
+            'sleepingbeauty': '😴', 'slice-of-sasha': '🔪', 'slither': '🐍',
+            'slither snake': '🐍', 'slope': '⛷️', 'slope2': '⛷️', 'slope-ball': '⚽',
+            'sm63': '🍄', 'sm64': '🍄', 'smashkarts': '🏎️', 'smokingbarrels': '🔫',
+            'snake': '🐍', 'snowbattle': '❄️', 'soldier-legend': '🎖️', 'solitaire': '🃏',
+            'sort-the-court': '👑', 'soundboard': '🔊', 'spacecompany': '🚀',
+            'space-company': '🛸', 'spacegarden': '🌱', 'spacehuggers': '🤗',
+            'spelunky': '🪨', 'ssf': '⚔️', 'stack': '📦', 'stack-bump-3d': '📦',
+            'station-141': '🚉', 'stealingthediamond': '💎', 'stick-archers-battle': '🏹',
+            'stickclimb': '🧗', 'stickman': '🧍', 'stickman-boost': '🚀',
+            'stickman-dismount': '💀', 'stickman-epic-battle': '⚔️', 'stickman-golf': '⛳',
+            'Stickman-Survival': '🛡️', 'stickwar': '⚔️', 'stormthehouse2': '🏠',
+            'subway-surfers': '🚇', 'subway-surfers-bali': '🏝️', 'superhero-io': '🦸',
+            'superhot': '🔴', 'supermarioconstruct': '🍄', 'super-mario-maker-online': '🍄',
+            'super-puffer-fish-3d': '🐡', 'swerve': '↪️', 'synesthesia': '🎵',
+            'tacticalassasin2': '🎯', 'tactical-weapon-pack-2': '🔫',
+            'tail-of-the-dragon': '🐉', 'tank-trouble-2': '🔫', 'tanuki-sunset': '🦝',
+            'temple-run-2': '🏛️', 'tetris': '🧱', 'thebattle': '⚔️',
+            'the-final-earth': '🌍', 'the-final-earth-2': '🌍', 'theheist': '💰',
+            'the-impossible-quiz': '❓', 'the-impossible-quiz-2': '❓',
+            'the-little-giant': '🧗', 'themazeofspacegoblins': '👾',
+            'there-is-no-game': '🚫', 'thisistheonlylevel': '🎮', 'time-shooter-3': '⏱️',
+            'tiny-fishing': '🎣', 'tiny-fragments': '🧩', 'tiny-islands': '🏝️',
+            'topple-adventure': '🗼', 'tosstheturtle': '🐢', 'tough-growth': '🌱',
+            'towermaster': '🏰', 'townscaper': '🏘️', 'trimps': '🐜',
+            'tube-jumpers': '🤸', 'tunnel-rush': '🕳️', 'tunnelz': '🕳️',
+            'tv-static': '📺', 'twitch-tetris': '🧱', 'underrun': '🏃',
+            'unfold-2': '📄', 'up-left-out': '↖️', 'veloce': '🏎️', 'vex3': '🏃',
+            'vex4': '🏃', 'vex5': '🏃', 'vex6': '🏃', 'vex7': '🏃',
+            'waterworks': '💧', 'webretro': '🕹️', 'winter-falling-price': '❄️',
+            'wipo': '🌀', 'wolf3d': '🐺', 'wordle': '📝', 'worlds-hardest-game': '😈',
+            'worlds-hardest-game-2': '😈', 'x-trial-racing': '🏍️',
+            'xx142-b2exe': '👾', 'yoshifabrication': '🦖', 'you-are-bezos': '💰',
+            'zig-zag': '⚡', 'zombocalypse': '🧟', 'zombs-royale': '👑'
+        };
 
-        async function loadGames() {
-            try {
-                // Fetch the directory contents
-                const response = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/play.html?ref=main`);
-                if (!response.ok) throw new Error('Failed to fetch games');
-                
-                const data = await response.json();
-                
-                // If it's a directory
-                if (Array.isArray(data)) {
-                    renderButtons(data);
-                } else {
-                    // If it's a single file (fallback)
-                    gameGrid.innerHTML = '<div class="loading">No games found in directory. Check repo structure.</div>';
-                }
-            } catch (error) {
-                gameGrid.innerHTML = '<div class="loading">Error loading games. Please check your github link.</div>';
-                console.error(error);
-            }
-        }
+        const rawSlugs = '1|100ng|10-minutes-till-dawn|1v1lol|1v1space|2020-game|2048|2048-multitask|8ball-billards-classic|9007199254740992|achievementunlocked|adarkroom|adrenalinechallenge|age-of-war|alienhominid|alien-invaders-io|align-4|among-us|angry-birds|anti-terrorist-rush|arcade-wizard|asciispace|aspiring-artist|asteroids|astray|avalanche|awesome-tanks-2|backcountry|backflip-dive-3d|backrooms|bad-ice-cream|bad-ice-cream-2|bad-ice-cream-3|baldis-basics|basketball-io|basketball-legends-2020|basketball-stars|basket-bros-io|battleforgondor|bigredbutton|binding-of-isaac|bitlife|blacholesquare|blackholesquare|blackknight|blocky-snakes|bloonstd|bloonstd2|bloxors|bounceback|boxel-rebound|boxhead2play|brave-explorers|breakingthebank|breaklock|breakout|btd4|btts|burning-man-2|cannon-basketball-4|canyondefense|captaincallisto|cars-simulator|cell-machine|championarcher|chess|chill-radio|chromaincident|chromedino|chrome-dino|circlo|city-blocks-2|clean-up-io|cluster-rush|color-switch-2-challenges|connect3|cookieclicker|cookie-clicker|core-ball|craftmine|creativekillchamber|crossyroad|crowd city 2|csgo-clicker|ctr|ctr-holiday|ctr-tr|cubefield|cupcake2048|cuttherope|cuttherope2|dadish|dadish3|dadishtwo|dante|deal-or-no-deal|deathrun|death-run-3d|death-soul|defend-the-tank|dino|doctor-acorn2|dodge|doge2048|DogeMiner|doge-miner-2|doge-mining-simulator|doodle-jump|doublewires|douchebag-workout-2|dragon-vs-bricks|draw-the-hill|drive-mad|ducklife|ducklife1|ducklife2|ducklife3|ducklife4|duck-life-treasurehunt|duke-dashington-remastered|dungeon-craft|edgenotfound|edge-surf|elastic-face|elasticman|emulator-js|endlesswar3|escapingtheprison|evilglitch|evil-glitch|evolution|exo|factoryballs|factoryballsforever|factory-balls-forever|fake-virus|fancypantsadventures|fbwg|finns-fantastic-food-machine|fireboywatergirlforesttemple|fireice|firewater|flappy-2048|flappybird|flappy-bird|flappy-defense|flashtetris|flippy-fish|flood-runner-2|fridaynightfunkin|friendlyfire|froggys-battle|fruitninja|frying-nemo|game-inside|generic-fishing-game|geodash|geodash-2|geometry_jump_sketchy|geometrydash|georgeandtheprinter|getaway-shootout|getting-over-it|gimme-the-airpod|glass-city|go-ball|golf|goodnight|google-snake|gopher|gravity-soccer|green|greybox|grindcraft|grow-in-the-hole|gun-mayhem|gun-mayhem-2|gun-mayhem-redux|gunspin|hackertype|happy-hop|happy-wheels|hba|helicopter|helios|hexempire|HexGL|hextris|house-of-hazards|icys-purple-head|idle-breakout|idle-shark|impossiblequiz|interactivebuddy|iscribble-io|jelly-truck|jetpack|jimothy-piggerton|justfall|just-one-boss|kart-fight-io|kitchen-gun-game|kittencannon|klocki|konnekt|krunker|learntofly|learntofly2|line-rider|linquest|madalin-stunt-cars-2|madalin-stunt-cars-3|makeitmeme|mario|marvinspectrum|matrixrampage|mc1.5.2|mcbeta0.30|mcbeta1.3|meat-boy|meme2048|minecraft|minecraftbeta|minecraft-classic|minesweeper|miniputt|mini-stilts|missiles|motox3m|motox3m2|moto-x3m-2|motox3m-pool|moto-x3m-pool-party|motox3m-spooky|motox3mwinter|motox3m-winter|my-friend-pedro|n-gon|ninja|ninjavsevilcorp|ns-shaft|OfflineParadise|om-bounce|one-screen-run|one-screen-run-2|osu|ovo|packabunchas|pacman|pacman-fps|pandemic2|papa-louie|papasburgeria|papas-burgeria|papas-freezeria|papas-hot-doggeria|papas-pancakeria|papaspizzaria|papas-pizzeria|papas-sushiria|papas-wingeria|paperio2|papery-planes|particleclicker|particle-clicker|path-finder|pe-noire|pikwip|pixel-cave|pizzeria-simulator|polybranch|popcat-classic|portalflash|precision-client|protektor|pushback|push-the-square|push-your-luck|puzzle-ball|pvz-2|q1k3|racer|radiusraid|retrobowl|retro-bowl|retrohaunt|rise-of-neon-square|roadblocks|rocking-sky-trip|rolling-forests|rolly-vortex|rooftop-snipers|run3|run-3|sandboxels|sand-game|scrambled-eggs|scrapmetal|senya-and-oscar-2|sg|shadow-world-adventure|shards|shift-flash|shift-flash-2|short-life-2|short-ride|shuttledeck|skyblock|sleepingbeauty|slice-of-sasha|slither|slither snake|slope|slope2|slope-ball|sm63|sm64|smashkarts|smokingbarrels|snake|snowbattle|soldier-legend|solitaire|sort-the-court|soundboard|spacecompany|space-company|spacegarden|spacehuggers|spelunky|ssf|stack|stack-bump-3d|station-141|stealingthediamond|stick-archers-battle|stickclimb|stickman|stickman-boost|stickman-dismount|stickman-epic-battle|stickman-golf|Stickman-Survival|stickwar|stormthehouse2|subway-surfers|subway-surfers-bali|superhero-io|superhot|supermarioconstruct|super-mario-maker-online|super-puffer-fish-3d|swerve|synesthesia|tacticalassasin2|tactical-weapon-pack-2|tail-of-the-dragon|tank-trouble-2|tanuki-sunset|temple-run-2|tetris|thebattle|the-final-earth|the-final-earth-2|theheist|the-impossible-quiz|the-impossible-quiz-2|the-little-giant|themazeofspacegoblins|there-is-no-game|thisistheonlylevel|time-shooter-3|tiny-fishing|tiny-fragments|tiny-islands|topple-adventure|tosstheturtle|tough-growth|towermaster|townscaper|trimps|tube-jumpers|tunnel-rush|tunnelz|tv-static|twitch-tetris|underrun|unfold-2|up-left-out|veloce|vex3|vex4|vex5|vex6|vex7|waterworks|webretro|winter-falling-price|wipo|wolf3d|wordle|worlds-hardest-game|worlds-hardest-game-2|x-trial-racing|xx142-b2exe|yoshifabrication|you-are-bezos|zig-zag|zombocalypse|zombs-royale';
 
-        function renderButtons(files) {
-            gameGrid.innerHTML = '';
-            files.forEach(file => {
-                if (file.name.endsWith('.html')) {
-                    const cleanName = file.name.replace('.html', '');
-                    const btn = document.createElement('a');
-                    btn.className = 'game-btn';
-                    btn.href = `play.html?game=${cleanName}`;
-                    btn.innerHTML = `<span>🎮</span> ${cleanName}`;
-                    gameGrid.appendChild(btn);
-                }
+        const games = rawSlugs.split('|').filter(Boolean).map(slug => {
+            return {
+                slug: slug,
+                title: slug.replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim().replace(/\b\w/g, c => c.toUpperCase()),
+                icon: gameIcons[slug] || '🎮'
+            };
+        });
+
+        const grid = document.getElementById('gameGrid');
+        const search = document.getElementById('search');
+        const noResults = document.getElementById('noResults');
+
+        function renderGames(filter = '') {
+            const filtered = games.filter(g => 
+                g.title.toLowerCase().includes(filter.toLowerCase()) ||
+                g.slug.toLowerCase().includes(filter.toLowerCase())
+            );
+            
+            grid.innerHTML = '';
+            noResults.style.display = filtered.length === 0 ? 'block' : 'none';
+            
+            filtered.sort((a, b) => a.title.localeCompare(b.title)).forEach(game => {
+                const card = document.createElement('a');
+                card.className = 'game-card';
+                card.href = './play.html?game=' + encodeURIComponent(game.slug);
+                card.innerHTML = `
+                    <div class="game-icon">${game.icon}</div>
+                    <h3>${game.title}</h3>
+                `;
+                grid.appendChild(card);
             });
         }
 
-        loadGames();
+        search.addEventListener('input', (e) => renderGames(e.target.value));
+        renderGames();
     </script>
 </body>
 </html>

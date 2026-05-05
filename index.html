@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>HardMath | Dashboard</title>
+    <title>HardMath | Game Portal</title>
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https:;">
     <style>
@@ -33,7 +33,7 @@
             border-radius: 20px;
             padding: 35px;
             width: 100%;
-            max-width: 720px;
+            max-width: 800px;
             position: relative;
             z-index: 1;
         }
@@ -66,255 +66,35 @@
         }
         .t h1 { font-size: 1.5rem; margin-bottom: 2px; font-weight: 700; }
         .t p { color: #64748b; font-size: 0.85rem; }
-        h3 { margin-bottom: 12px; color: #e2e8f0; font-size: 1.05rem; display: flex; align-items: center; gap: 8px; }
-        h3::before { content: ""; width: 3px; height: 14px; background: linear-gradient(180deg, #6366f1, #0ea5e9); border-radius: 2px; }
-        .ig { display: flex; gap: 10px; margin-bottom: 20px; }
-        input[type="text"] {
-            flex: 1;
-            padding: 13px 16px;
+        
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+        }
+        
+        .game-btn {
+            background: #1e293b;
             border: 1px solid #334155;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            background: #0f172a;
-            color: #fff;
-        }
-        input[type="text"]:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,.15); }
-        .gobtn {
-            padding: 13px 24px;
-            background: linear-gradient(135deg, #6366f1, #0ea5e9);
-            color: #fff;
-            border: none;
-            border-radius: 10px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-        .section { margin-top: 25px; padding-top: 25px; border-top: 1px solid rgba(99,102,241,0.2); }
-        .chat { height: 320px; overflow-y: auto; padding: 15px; background: #0f172a; border: 1px solid #334155; border-radius: 10px; margin-bottom: 10px; }
-        .msg { margin-bottom: 10px; padding: 10px 14px; border-radius: 10px; max-width: 85%; word-break: break-word; font-size: 0.9rem; line-height: 1.5; }
-        .user { background: #3b82f6; color: #fff; margin-left: auto; }
-        .ai { background: #1e293b; color: #e2e8f0; border: 1px solid #334155; margin-right: auto; }
-        .cinput { display: flex; gap: 8px; }
-        .cinput input { flex: 1; padding: 11px; border: 1px solid #334155; border-radius: 9px; background: #0f172a; color: #fff; }
-        .cinput .gobtn { padding: 11px 20px; background: linear-gradient(135deg, #6366f1, #0ea5e9); color: #fff; border: none; border-radius: 9px; font-weight: 700; cursor: pointer; }
-        #panicPane {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: #fafbff;
-            color: #1a1a1a;
-            z-index: 9999;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 40px;
-            font-family: Georgia, serif;
-            text-align: center;
-        }
-        #panicPane h1 { font-size: 2.2rem; margin-bottom: 10px; color: #111; }
-        #panicPane h2 { font-size: 1.5rem; margin-bottom: 20px; color: #333; font-weight: 400; }
-        #panicPane .formula { font-size: 1.8rem; margin: 15px 0; padding: 15px; background: #eef2ff; border-radius: 10px; border: 1px dashed #6366f1; }
-        #panicPane p { font-size: 1.05rem; line-height: 1.6; margin-bottom: 12px; max-width: 600px; }
-        #panicPane .step { background: #f3f4f6; padding: 12px; border-radius: 8px; margin: 8px 0; width: 100%; max-width: 600px; text-align: left; }
-        #panicPane .step b { color: #4f46e5; }
-    </style>
-</head>
-<body>
-    <div class="c">
-        <div class="top"><a href="/?action=logout" class="tbtn">Logout</a></div>
-        <div class="h">
-            <div class="lo">&#8721;</div>
-            <div class="t">
-                <h1>HardMath</h1>
-                <p>Advanced Computation & Study Tools</p>
-            </div>
-        </div>
-        <h3>Web Access</h3>
-        <div class="ig">
-            <input type="text" id="u" placeholder="Enter any URL..." autofocus>
-            <button class="gobtn" onclick="go()">Go</button>
-            <button class="gobtn" onclick="location.href='play.html'">Play</button>
-        </div>
-        <div class="section">
-            <h3>AI Assistant</h3>
-            <div class="chat" id="b">
-                <div class="msg ai">Hi! How can I help you today?</div>
-            </div>
-            <div class="cinput">
-                <input type="text" id="m" placeholder="Ask anything..." autocomplete="off">
-                <button class="gobtn" onclick="s()">Send</button>
-            </div>
-        </div>
-    </div>
-    <div id="panicPane">
-        <h1>Quadratic Equations</h1>
-        <h2>Step-by-Step Guide</h2>
-        <p>A quadratic equation is a polynomial equation of degree 2:</p>
-        <div class="formula">ax&#178; + bx + c = 0</div>
-        <p>The quadratic formula:</p>
-        <div class="formula">x = (-b &#177; &#8730;(b&#178; - 4ac)) / 2a</div>
-        <div class="step"><b>Step 1:</b> Identify a, b, and c.</div>
-        <div class="step"><b>Step 2:</b> Calculate discriminant: &#916; = b&#178; - 4ac.</div>
-        <div class="step"><b>Step 3:</b> Determine root type based on &#916;.</div>
-        <div class="step"><b>Step 4:</b> Apply the formula and simplify.</div>
-        <p style="margin-top:20px;color:#666;font-size:.8rem">Press \\ to close</p>
-    </div>
-    <script>
-        function go(v){
-            var u=v||document.getElementById("u").value;
-            if(u)location.href="/?url="+encodeURIComponent(u)
-        }
-        document.getElementById("u").addEventListener("keypress",function(e){if(e.key==="Enter")go()});
-        var b=document.getElementById("b"),m=document.getElementById("m");
-        function a(t,u){
-            var d=document.createElement("div");
-            d.className="msg "+(u?"user":"ai");
-            d.textContent=t;
-            b.appendChild(d);
-            b.scrollTop=b.scrollHeight
-        }
-        async function s(){
-            var t=m.value.trim();
-            if(!t)return;
-            a(t,true);
-            m.value="";
-            try{
-                var r=await fetch("/?action=chat&chat="+encodeURIComponent(t),{credentials:"include"});
-                var d=await r.json();
-                if(d.error)a("Error: "+d.error);
-                else a(d.reply)
-            }catch(e){
-                a("Network error")
-            }
-        }
-        m.addEventListener("keypress",function(e){if(e.key==="Enter")s()});
-        var isPanic=false;
-        document.addEventListener("keydown",function(e){
-            if(e.key==="\\"){
-                isPanic=!isPanic;
-                document.getElementById("panicPane").style.display=isPanic?"flex":"none";
-                if(!isPanic)document.getElementById("u").focus()
-            }
-        });
-    </script>
-</body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>HardMath | Dashboard</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https:;">
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background: #0b1020;
             color: #e2e8f0;
-            min-height: 100vh;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            padding-top: 40px;
-        }
-        body::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            background: radial-gradient(circle at 30% 30%, rgba(99,102,241,0.1), transparent 55%), radial-gradient(circle at 70% 70%, rgba(14,165,233,0.1), transparent 55%);
-            pointer-events: none;
-            z-index: 0;
-        }
-        .c {
-            background: rgba(15,23,42,0.85);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(99,102,241,0.2);
-            border-radius: 20px;
-            padding: 35px;
-            width: 100%;
-            max-width: 720px;
-            position: relative;
-            z-index: 1;
-        }
-        .top { display: flex; justify-content: flex-end; margin-bottom: 20px; }
-        .tbtn {
-            padding: 8px 16px;
-            background: rgba(239,68,68,0.12);
-            border: 1px solid rgba(239,68,68,0.3);
-            color: #f87171;
-            border-radius: 8px;
-            font-size: 0.85rem;
+            padding: 15px;
+            border-radius: 10px;
             text-decoration: none;
             font-weight: 600;
-        }
-        .tbtn:hover { background: rgba(239,68,68,0.2); }
-        .h { display: flex; align-items: center; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid rgba(99,102,241,0.2); }
-        .lo {
-            background: linear-gradient(135deg, #6366f1, #0ea5e9);
-            width: 56px;
-            height: 56px;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            font-weight: 800;
-            margin-right: 16px;
-            color: #fff;
-            font-family: 'Cambria Math', serif;
-        }
-        .t h1 { font-size: 1.5rem; margin-bottom: 2px; font-weight: 700; }
-        .t p { color: #64748b; font-size: 0.85rem; }
-        h3 { margin-bottom: 12px; color: #e2e8f0; font-size: 1.05rem; display: flex; align-items: center; gap: 8px; }
-        h3::before { content: ""; width: 3px; height: 14px; background: linear-gradient(180deg, #6366f1, #0ea5e9); border-radius: 2px; }
-        .ig { display: flex; gap: 10px; margin-bottom: 20px; }
-        input[type="text"] {
-            flex: 1;
-            padding: 13px 16px;
-            border: 1px solid #334155;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            background: #0f172a;
-            color: #fff;
-        }
-        input[type="text"]:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,.15); }
-        .gobtn {
-            padding: 13px 24px;
-            background: linear-gradient(135deg, #6366f1, #0ea5e9);
-            color: #fff;
-            border: none;
-            border-radius: 10px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-        .section { margin-top: 25px; padding-top: 25px; border-top: 1px solid rgba(99,102,241,0.2); }
-        .chat { height: 320px; overflow-y: auto; padding: 15px; background: #0f172a; border: 1px solid #334155; border-radius: 10px; margin-bottom: 10px; }
-        .msg { margin-bottom: 10px; padding: 10px 14px; border-radius: 10px; max-width: 85%; word-break: break-word; font-size: 0.9rem; line-height: 1.5; }
-        .user { background: #3b82f6; color: #fff; margin-left: auto; }
-        .ai { background: #1e293b; color: #e2e8f0; border: 1px solid #334155; margin-right: auto; }
-        .cinput { display: flex; gap: 8px; }
-        .cinput input { flex: 1; padding: 11px; border: 1px solid #334155; border-radius: 9px; background: #0f172a; color: #fff; }
-        .cinput .gobtn { padding: 11px 20px; background: linear-gradient(135deg, #6366f1, #0ea5e9); color: #fff; border: none; border-radius: 9px; font-weight: 700; cursor: pointer; }
-        #panicPane {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: #fafbff;
-            color: #1a1a1a;
-            z-index: 9999;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 40px;
-            font-family: Georgia, serif;
+            transition: all 0.2s;
             text-align: center;
+            font-size: 0.9rem;
         }
-        #panicPane h1 { font-size: 2.2rem; margin-bottom: 10px; color: #111; }
-        #panicPane h2 { font-size: 1.5rem; margin-bottom: 20px; color: #333; font-weight: 400; }
-        #panicPane .formula { font-size: 1.8rem; margin: 15px 0; padding: 15px; background: #eef2ff; border-radius: 10px; border: 1px dashed #6366f1; }
-        #panicPane p { font-size: 1.05rem; line-height: 1.6; margin-bottom: 12px; max-width: 600px; }
-        #panicPane .step { background: #f3f4f6; padding: 12px; border-radius: 8px; margin: 8px 0; width: 100%; max-width: 600px; text-align: left; }
-        #panicPane .step b { color: #4f46e5; }
+        .game-btn:hover {
+            background: #334155;
+            transform: translateY(-2px);
+            border-color: #6366f1;
+        }
+        .game-btn span {
+            display: block;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 <body>
@@ -323,77 +103,33 @@
         <div class="h">
             <div class="lo">&#8721;</div>
             <div class="t">
-                <h1>HardMath</h1>
-                <p>Advanced Computation & Study Tools</p>
+                <h1>Game Portal</h1>
+                <p>Select a game to play</p>
             </div>
         </div>
-        <h3>Web Access</h3>
-        <div class="ig">
-            <input type="text" id="u" placeholder="Enter any URL..." autofocus>
-            <button class="gobtn" onclick="go()">Go</button>
-            <button class="gobtn" onclick="location.href='play.html'">Play</button>
-        </div>
-        <div class="section">
-            <h3>AI Assistant</h3>
-            <div class="chat" id="b">
-                <div class="msg ai">Hi! How can I help you today?</div>
-            </div>
-            <div class="cinput">
-                <input type="text" id="m" placeholder="Ask anything..." autocomplete="off">
-                <button class="gobtn" onclick="s()">Send</button>
-            </div>
+
+        <h3 style="margin-bottom: 15px; color: #e2e8f0;">Available Games</h3>
+        <div class="game-grid">
+            <!-- Add or remove games here based on your repo -->
+            <a href="play.html?game=snake" class="game-btn">
+                <span>🐍</span> Snake
+            </a>
+            <a href="play.html?game=breakout" class="game-btn">
+                <span>🧱</span> Breakout
+            </a>
+            <a href="play.html?game=tetris" class="game-btn">
+                <span>🧩</span> Tetris
+            </a>
+            <a href="play.html?game=pong" class="game-btn">
+                <span>🏓</span> Pong
+            </a>
+            <a href="play.html?game=tank" class="game-btn">
+                <span>🚀</span> Tank Battle
+            </a>
+            <a href="play.html?game=flappy" class="game-btn">
+                <span>🐦</span> Flappy Bird
+            </a>
         </div>
     </div>
-    <div id="panicPane">
-        <h1>Quadratic Equations</h1>
-        <h2>Step-by-Step Guide</h2>
-        <p>A quadratic equation is a polynomial equation of degree 2:</p>
-        <div class="formula">ax&#178; + bx + c = 0</div>
-        <p>The quadratic formula:</p>
-        <div class="formula">x = (-b &#177; &#8730;(b&#178; - 4ac)) / 2a</div>
-        <div class="step"><b>Step 1:</b> Identify a, b, and c.</div>
-        <div class="step"><b>Step 2:</b> Calculate discriminant: &#916; = b&#178; - 4ac.</div>
-        <div class="step"><b>Step 3:</b> Determine root type based on &#916;.</div>
-        <div class="step"><b>Step 4:</b> Apply the formula and simplify.</div>
-        <p style="margin-top:20px;color:#666;font-size:.8rem">Press \\ to close</p>
-    </div>
-    <script>
-        function go(v){
-            var u=v||document.getElementById("u").value;
-            if(u)location.href="/?url="+encodeURIComponent(u)
-        }
-        document.getElementById("u").addEventListener("keypress",function(e){if(e.key==="Enter")go()});
-        var b=document.getElementById("b"),m=document.getElementById("m");
-        function a(t,u){
-            var d=document.createElement("div");
-            d.className="msg "+(u?"user":"ai");
-            d.textContent=t;
-            b.appendChild(d);
-            b.scrollTop=b.scrollHeight
-        }
-        async function s(){
-            var t=m.value.trim();
-            if(!t)return;
-            a(t,true);
-            m.value="";
-            try{
-                var r=await fetch("/?action=chat&chat="+encodeURIComponent(t),{credentials:"include"});
-                var d=await r.json();
-                if(d.error)a("Error: "+d.error);
-                else a(d.reply)
-            }catch(e){
-                a("Network error")
-            }
-        }
-        m.addEventListener("keypress",function(e){if(e.key==="Enter")s()});
-        var isPanic=false;
-        document.addEventListener("keydown",function(e){
-            if(e.key==="\\"){
-                isPanic=!isPanic;
-                document.getElementById("panicPane").style.display=isPanic?"flex":"none";
-                if(!isPanic)document.getElementById("u").focus()
-            }
-        });
-    </script>
 </body>
 </html>

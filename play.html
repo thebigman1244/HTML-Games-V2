@@ -37,9 +37,12 @@
             align-items: center;
             background: #000;
         }
+        /* This container holds the injected game content */
+        #game-content {
+            width: 100%;
+            height: 100%;
+        }
         canvas {
-            background: #000;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
             max-width: 100%;
             max-height: 100%;
         }
@@ -58,7 +61,7 @@
 </head>
 <body>
     <div class="game-header">
-        <span class="game-title" id="gameName">Game Mode</span>
+        <span class="game-title" id="gameName">Loading...</span>
         <button onclick="location.href='index.html'" style="padding: 5px 15px; background: #ef4444; color: white; border: none; border-radius: 5px; cursor: pointer;">Exit</button>
     </div>
     
@@ -80,7 +83,6 @@
         
         window.onload = function() {
             canvas.focus();
-            console.log("Game Canvas Focused. Waiting for game load...");
         };
 
         window.addEventListener("keydown", function(e) {
@@ -92,143 +94,46 @@
         // --- GAME LOADER ---
         const params = new URLSearchParams(window.location.search);
         const gameName = params.get('game');
-        const ctx = canvas.getContext('2d');
+        const gameContainer = document.getElementById('game-content');
         const gameTitle = document.getElementById('gameName');
-        const controls = document.getElementById('gameControls');
 
-        // Initialize the default game
         if (!gameName) {
-            loadGame('snake'); // Default to Snake
+            gameTitle.textContent = "No Game Selected";
+            loadGame('snake'); // Default fallback
         } else {
             loadGame(gameName);
         }
 
-        function loadGame(game) {
-            gameTitle.textContent = game.charAt(0).toUpperCase() + game.slice(1);
+        async function loadGame(gameName) {
+            gameTitle.textContent = gameName.charAt(0).toUpperCase() + gameName.slice(1);
             
-            // --- GAME LOGIC AREA ---
-            // You can add specific game logic here or load script files.
-            // Example for Snake:
-            
-            if (game === 'snake') {
-                runSnakeGame();
-            } 
-            else if (game === 'breakout') {
-                runBreakoutGame();
+            const repoOwner = 'thebigman1244';
+            const repoName = 'HTML-Games-V2';
+            const fileUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/main/${gameName}.html`;
+
+            try {
+                const response = await fetch(fileUrl);
+                if (!response.ok) throw new Error('Game not found');
+                
+                let gameHtml = await response.text();
+                
+                // Clean up the HTML (remove head/body if present to prevent duplication)
+                gameHtml = gameHtml.replace(/<head[^>]*>.*?<\/head>/gi, '');
+                gameHtml = gameHtml.replace(/<body[^>]*>/gi, '');
+                gameHtml = gameHtml.replace(/<\/body>/gi, '');
+                gameHtml = gameHtml.replace(/<html[^>]*>/gi, '');
+                gameHtml = gameHtml.replace(/<\/html>/gi, '');
+
+                // Inject into container
+                gameContainer.innerHTML = gameHtml;
+
+                // Re-focus canvas
+                canvas.focus();
+                console.log(`Loaded ${gameName}`);
+
+            } catch (error) {
+                gameContainer.innerHTML = `<div style="color:white; padding:20px;">Game '${gameName}' not found.<br>Error: ${error.message}</div>`;
             }
-            // Add more games below:
-            // else if (game === 'tetris') { runTetrisGame(); }
-            else {
-                ctx.fillStyle = '#fff';
-                ctx.font = '30px Arial';
-                ctx.fillText("Game '" + game + "' not loaded.", 250, 300);
-                ctx.font = '16px Arial';
-                ctx.fillText("Add logic for this game in play.html", 250, 330);
-            }
-        }
-
-        // --- PLACEHOLDER SNAKE GAME ---
-        function runSnakeGame() {
-            let snake = [{x: 10, y: 10}];
-            let food = {x: 15, y: 15};
-            let dx = 1;
-            let dy = 0;
-            const gridSize = 20;
-
-            function draw() {
-                // Clear background
-                ctx.fillStyle = '#0f172a';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                // Move Snake
-                const head = {x: snake[0].x + dx, y: snake[0].y + dy};
-                snake.unshift(head);
-
-                // Check Food
-                if (head.x === food.x && head.y === food.y) {
-                    food = {x: Math.floor(Math.random() * 40), y: Math.floor(Math.random() * 30)};
-                } else {
-                    snake.pop();
-                }
-
-                // Draw Food
-                ctx.fillStyle = 'red';
-                ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize - 2, gridSize - 2);
-
-                // Draw Snake
-                ctx.fillStyle = '#6366f1';
-                snake.forEach(part => {
-                    ctx.fillRect(part.x * gridSize, part.y * gridSize, gridSize - 2, gridSize - 2);
-                });
-
-                requestAnimationFrame(draw);
-            }
-
-            // Listen for Snake Controls
-            window.addEventListener('keydown', (e) => {
-                if (e.key === 'ArrowUp' && dy === 0) { dx = 0; dy = -1; }
-                if (e.key === 'ArrowDown' && dy === 0) { dx = 0; dy = 1; }
-                if (e.key === 'ArrowLeft' && dx === 0) { dx = -1; dy = 0; }
-                if (e.key === 'ArrowRight' && dx === 0) { dx = 1; dy = 0; }
-            });
-
-            draw();
-        }
-
-        // --- PLACEHOLDER BREAKOUT GAME ---
-        function runBreakoutGame() {
-            let paddle = {x: 350, y: 550, w: 100, h: 10};
-            let ball = {x: 400, y: 500, dx: 4, dy: -4, r: 8};
-            const bricks = [];
-            for(let i=0; i<8; i++) bricks[i] = {x: i*100 + 50, y: 100, status: 1};
-
-            function draw() {
-                ctx.fillStyle = '#0f172a';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                // Draw Paddle
-                ctx.fillStyle = '#6366f1';
-                ctx.fillRect(paddle.x, paddle.y, paddle.w, paddle.h);
-
-                // Draw Ball
-                ctx.beginPath();
-                ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI*2);
-                ctx.fillStyle = '#fff';
-                ctx.fill();
-                ctx.closePath();
-
-                // Bricks
-                bricks.forEach(b => {
-                    if(b.status === 1) {
-                        ctx.fillStyle = '#0ea5e9';
-                        ctx.fillRect(b.x, b.y, 80, 20);
-                    }
-                });
-
-                // Move Ball
-                ball.x += ball.dx;
-                ball.y += ball.dy;
-
-                // Wall Collision
-                if(ball.x + ball.dx > canvas.width - ball.r || ball.x + ball.dx < ball.r) ball.dx = -ball.dx;
-                if(ball.y + ball.dy < ball.r) ball.dy = -ball.dy;
-                if(ball.y + ball.dy > canvas.height - ball.r) {
-                    if(ball.x > paddle.x && ball.x < paddle.x + paddle.w) ball.dy = -ball.dy;
-                    else {
-                        // Reset
-                        ball.x = 400; ball.y = 500; ball.dx = 4; ball.dy = -4;
-                    }
-                }
-
-                requestAnimationFrame(draw);
-            }
-
-            window.addEventListener('keydown', (e) => {
-                if (e.key === 'ArrowLeft') paddle.x -= 20;
-                if (e.key === 'ArrowRight') paddle.x += 20;
-            });
-
-            draw();
         }
     </script>
 </body>

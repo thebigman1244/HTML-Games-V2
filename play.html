@@ -1,69 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HardMath | Games</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body, html { width: 100%; height: 100%; overflow: hidden; background: #0b1020; font-family: sans-serif; }
-    iframe { width: 100%; height: 100%; border: none; display: block; }
-  </style>
+    <meta charset="UTF-8">
+    <title>HardMath | Game Mode</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0b1020;
+            color: #fff;
+            font-family: sans-serif;
+            overflow: hidden; /* Prevent scrolling when playing */
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .game-header {
+            padding: 10px 20px;
+            background: rgba(15,23,42,0.9);
+            border-bottom: 1px solid #334155;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+        .game-title {
+            font-weight: bold;
+            color: #6366f1;
+        }
+        .game-container {
+            flex: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+        }
+        canvas {
+            background: #000;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            max-width: 100%;
+            max-height: 100%;
+        }
+        .instructions {
+            position: absolute;
+            bottom: 20px;
+            color: #94a3b8;
+            font-size: 0.9rem;
+            text-align: center;
+            pointer-events: none;
+        }
+    </style>
 </head>
 <body>
+    <div class="game-header">
+        <span class="game-title">Game Mode</span>
+        <button onclick="location.href='index.html'" style="padding: 5px 15px; background: #ef4444; color: white; border: none; border-radius: 5px; cursor: pointer;">Exit to Dashboard</button>
+    </div>
+    
+    <div class="game-container">
+        <!-- 
+            IMPORTANT: 
+            The canvas has tabindex="0" so it can receive keyboard focus.
+            The game logic will listen to this canvas.
+        -->
+        <canvas id="gameCanvas" width="800" height="600" tabindex="0"></canvas>
+        <div class="instructions">Press \\ to Panic (Exit) • Use Arrow Keys or WASD to Play</div>
+    </div>
 
-  <iframe id="gameFrame" src=""></iframe>
-
-  <script>
-    const WORKER_URL = "https://proud-dust-ed3a.bryce-gilmartin.workers.dev/"; // PASTE YOUR WORKER URL HERE
-    // Ensure this matches the URL of the game site you want to play
-    const GAME_URL = "https://html-games-v2-cxz5.onrender.com"; 
-
-    const iframe = document.getElementById('gameFrame');
-
-    // Load game into iframe via Worker proxy
-    iframe.src = WORKER_URL + "/?url=" + encodeURIComponent(GAME_URL);
-
-    // This script injects the focus/click fix into the game page
-    // It runs every time the page loads
-    window.addEventListener('load', function() {
-      const script = document.createElement('script');
-      script.textContent = `
-        (function(){
-          var PO = '${WORKER_URL}';
-          var TO = '${GAME_URL}';
-          var BASE = '${GAME_URL}';
-          
-          // Rewrite URLs for images/css
-          function rw(u){
-            if(!u || typeof u !== "string") return u;
-            if(["data:","blob:","javascript:","mailto:","tel:","sms:","#"].some(function(p){ return u.startsWith(p)})) return u;
-            if(u.includes(PO)) return u;
-            var a;
-            try{
-              if(u.startsWith("//")) a = "https:" + u;
-              else if(u.startsWith("/")) a = TO + u;
-              else if(u.startsWith("http")) a = u;
-              else a = new URL(u, BASE).href;
-            } catch(e){ return u }
-            return PO + "/?url=" + encodeURIComponent(a);
-          }
-          
-          // Inject into anchor tags
-          document.addEventListener("click", function(e){
-            var a = e.target.closest && e.target.closest("a");
-            if(a && a.href && a.href.includes("http") && !a.href.includes(PO)){
-              e.preventDefault();
-              window.location.href = rw(a.href);
+    <script>
+        // --- PANEIC BUTTON LOGIC ---
+        document.addEventListener('keydown', (e) => {
+            // Backslash key
+            if (e.key === '\\') {
+                window.location.href = 'index.html';
             }
-          });
-          
-          // Ensure focus stays on game, not url bar
-          document.body.focus();
-        })();
-      `;
-      document.head.appendChild(script);
-    });
-  </script>
+        });
+
+        // --- KEYBOARD INPUT LOGIC ---
+        // This ensures the canvas is focused so keyboard events are captured immediately
+        const canvas = document.getElementById('gameCanvas');
+        
+        // Focus the canvas when the page loads
+        window.onload = function() {
+            canvas.focus();
+            console.log("Game Canvas Focused. Keyboard input active.");
+        };
+
+        // Optional: Prevent scrolling when using arrow keys
+        window.addEventListener("keydown", function(e) {
+            if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
+                e.preventDefault();
+            }
+        }, false);
+
+        // --- PLACEHOLDER GAME LOOP ---
+        // You can replace this loop with your specific game code
+        const ctx = canvas.getContext('2d');
+        let gameRunning = true;
+        let rectX = 50;
+        let rectY = 50;
+
+        function draw() {
+            if (!gameRunning) return;
+            
+            // Clear screen
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw player
+            ctx.fillStyle = '#6366f1';
+            ctx.fillRect(rectX, rectY, 40, 40);
+
+            // Draw text
+            ctx.fillStyle = '#fff';
+            ctx.font = '20px Arial';
+            ctx.fillText("Welcome to Game Mode!", 20, 30);
+            ctx.fillText("Arrow Keys to Move", 20, 60);
+
+            requestAnimationFrame(draw);
+        }
+
+        // Listen for movement
+        window.addEventListener('keydown', (e) => {
+            const speed = 20;
+            if (e.key === 'ArrowUp' || e.key === 'w') rectY -= speed;
+            if (e.key === 'ArrowDown' || e.key === 's') rectY += speed;
+            if (e.key === 'ArrowLeft' || e.key === 'a') rectX -= speed;
+            if (e.key === 'ArrowRight' || e.key === 'd') rectX += speed;
+        });
+
+        draw();
+
+    </script>
 </body>
 </html>

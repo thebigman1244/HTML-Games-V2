@@ -1,0 +1,1 @@
+If you add all this to a static website hoster such as render, or non static hosters such as cloudflare then it will allow you to play 410 games, and if you press \ it birngs up a fake physics lesson in order to hide it.

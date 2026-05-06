@@ -248,6 +248,10 @@
             const formattedTitle = gameSlug.replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim().replace(/\b\w/g, c => c.toUpperCase());
             gameTitle.textContent = formattedTitle;
             document.title = 'HardMath | ' + formattedTitle;
+            
+            // Ensure correct path: ./slug/ (for folders) or ./slug.html (for files)
+            // If you are using files directly (snake.html), change the line below to:
+            // gameFrame.src = './' + encodeURIComponent(gameSlug) + '.html';
             gameFrame.src = './' + encodeURIComponent(gameSlug) + '/';
         } else {
             gameTitle.textContent = 'No game selected';

@@ -1,6 +1,6 @@
-<!DOCTYPE html>
+<DOCTYPE html>
 <html lang="en">
-<head>
+<head><!
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HardMath | Games</title>
@@ -296,13 +296,6 @@
 
         search.addEventListener('input', (e) => renderGames(e.target.value));
         renderGames();
-
-        // Optional: Handle if user runs play.html directly without a game
-        const playParams = new URLSearchParams(window.location.search);
-        const gameSlug = playParams.get('game');
-        if (gameSlug) {
-            renderGames(gameSlug);
-        }
     </script>
 </body>
-</html>
+</html> 

@@ -169,7 +169,8 @@
         </div>
         <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
     </div>
-    <iframe class="game-frame" id="gameFrame" allowfullscreen></iframe>
+
+    <iframe class="game-frame" id="gameFrame" tabindex="0" allowfullscreen></iframe>
 
     <div id="panicPane">
         <div class="header-bar">
@@ -235,7 +236,7 @@
         2. Friction: f<sub>k</sub> = μ<sub>k</sub>F<sub>N</sub> = 0.3(49) = 14.7 N<br>
         3. Horizontal: ΣF<sub>x</sub> = F<sub>applied</sub> − f<sub>k</sub> = 25 − 14.7 = 10.3 N<br>
         4. Acceleration: a = ΣF / m = 10.3 / 5 = 2.06 m/s²</div>
-        <p class="close-hint">Press \\ to close this panel</p>
+        <p class="close-hint">Press \ to close this panel</p>
     </div>
 
     <script>
@@ -243,6 +244,7 @@
         const gameSlug = params.get('game');
         const gameTitle = document.getElementById('gameTitle');
         const gameFrame = document.getElementById('gameFrame');
+        const panicPane = document.getElementById('panicPane');
 
         if (gameSlug) {
             const formattedTitle = gameSlug.replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim().replace(/\b\w/g, c => c.toUpperCase());
@@ -250,25 +252,62 @@
             document.title = 'HardMath | ' + formattedTitle;
             gameFrame.src = './' + encodeURIComponent(gameSlug) + '/';
         } else {
-            // Redirect to game library if no game selected
             window.location.href = '/play.html';
+        }
+
+        let isPanic = false;
+
+        function focusGameFrame() {
+            if (!isPanic) {
+                gameFrame.focus();
+
+                try {
+                    gameFrame.contentWindow.focus();
+                } catch (err) {}
+            }
         }
 
         function toggleFullscreen() {
             if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen();
+                document.documentElement.requestFullscreen().then(focusGameFrame);
             } else {
-                document.exitFullscreen();
+                document.exitFullscreen().then(focusGameFrame);
             }
         }
 
-        let isPanic = false;
+        function togglePanicPane() {
+            isPanic = !isPanic;
+            panicPane.style.display = isPanic ? 'flex' : 'none';
+
+            if (!isPanic) {
+                focusGameFrame();
+            }
+        }
+
+        gameFrame.addEventListener('load', function() {
+            focusGameFrame();
+
+            try {
+                gameFrame.contentWindow.document.addEventListener('keydown', function(e) {
+                    if (e.key === '\\') {
+                        e.preventDefault();
+                        togglePanicPane();
+                    }
+                });
+            } catch (err) {}
+        });
+
+        gameFrame.addEventListener('click', focusGameFrame);
+
         document.addEventListener('keydown', function(e) {
             if (e.key === '\\') {
-                e.preventDefault(); 
-                isPanic = !isPanic;
-                document.getElementById('panicPane').style.display = isPanic ? 'flex' : 'none';
+                e.preventDefault();
+                togglePanicPane();
             }
+        });
+
+        window.addEventListener('blur', function() {
+            setTimeout(focusGameFrame, 0);
         });
     </script>
 </body>
